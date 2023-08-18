@@ -11,8 +11,37 @@ generator client {
 // Define your own datamodels here and run `yarn redwood prisma migrate dev`
 // to create migrations for them and apply to your dev DB.
 // TODO: Please remove the following example:
-model UserExample {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model User {
+  id                String      @id @default(cuid())
+  email             String      @unique
+  name              String?
+  salt              String
+  hashedPassword    String
+  resetToken        String?
+  resetTokenExpires String?
+  UserEvent         UserEvent[]
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  location    String?
+  url         String?
+  status      String
+  busyStatus  String
+  organizer   String
+  attendees   String?
+  start       String
+  duration    String
+  geo         String?
+  UserEvent   UserEvent[]
+}
+
+model UserEvent {
+  id      String @id @default(cuid())
+  userId  String
+  eventId String
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
 }

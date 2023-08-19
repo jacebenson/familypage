@@ -3,7 +3,7 @@ import {
   Flex,
   Avatar,
   HStack,
-  Text,
+  Image,
   IconButton,
   Button,
   Menu,
@@ -14,14 +14,17 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Link,
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-
-const Links = ['Dashboard', 'Projects', 'Team']
+import { useAuth } from 'src/auth'
+import { navigate, routes } from '@redwoodjs/router'
+const Links = [
+  { name: 'Home', path: '/calendar' },
+]
 
 const NavLink = (props) => {
   const { children } = props
-
   return (
     <Box
       as="a"
@@ -32,14 +35,16 @@ const NavLink = (props) => {
         textDecoration: 'none',
         bg: useColorModeValue('gray.200', 'gray.700'),
       }}
-      href={'#'}>
+      href={props.href || '#'}>
       {children}
     </Box>
   )
 }
 
 const HomeLayout = ({ children }) => {
+  const { isAuthenticated, currentUser, logOut } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const logo = '/logo-wide.png'
 
 return (
   <>
@@ -53,34 +58,54 @@ return (
           onClick={isOpen ? onClose : onOpen}
         />
         <HStack spacing={8} alignItems={'center'}>
-          <Box>Logo</Box>
+          <Box>
+            <Image src={logo} maxW={'70px'} />
+          </Box>
           <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <NavLink key={link.name} href={link.path}>{link.name}</NavLink>
             ))}
           </HStack>
         </HStack>
         <Flex alignItems={'center'}>
           <Menu>
+          {isAuthenticated && (
+            <>
             <MenuButton
               as={Button}
               rounded={'full'}
               variant={'link'}
               cursor={'pointer'}
+              title='Account'
               minW={0}>
               <Avatar
+                name={currentUser.name}
                 size={'sm'}
-                src={
-                  'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                }
+                //src={
+                //  'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                //}
               />
             </MenuButton>
             <MenuList>
-              <MenuItem>Link 1</MenuItem>
-              <MenuItem>Link 2</MenuItem>
+              <MenuItem onClick={()=>{navigate(routes.myProfile())}}>Profile</MenuItem>
               <MenuDivider />
-              <MenuItem>Link 3</MenuItem>
+              <MenuItem onClick={()=>{logOut()}}>Log out</MenuItem>
             </MenuList>
+            </>
+          )}
+          {!isAuthenticated && (
+            <MenuButton
+              as={Link}
+              rounded={'full'}
+              variant={'link'}
+              cursor={'pointer'}
+              minW={0}
+              href={routes.login()}
+              >
+              Login
+            </MenuButton>
+          )}
+
           </Menu>
         </Flex>
       </Flex>
@@ -89,7 +114,12 @@ return (
         <Box pb={4} display={{ md: 'none' }}>
           <Stack as={'nav'} spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <>
+              <pre>
+              {JSON.stringify(link, null, 2)}
+              </pre>
+              {/*<NavLink key={link.name}>{link.name}</NavLink>*/}
+              </>
             ))}
           </Stack>
         </Box>

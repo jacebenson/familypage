@@ -62,8 +62,24 @@ export const QUERY = gql`
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>Empty</div>
+/*export const Empty = () => (<>
 
+  <AddEvent events={[]} setEvents={(data)=>{}} />
+
+  <Calendar
+          localizer={localizer}
+          events={[]}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 500 }}
+          onSelectEvent={(event) => {
+            console.log(event)
+            // lets open a modal here
+            openModal(event)
+          }}
+        />
+</>)
+*/
 export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
@@ -99,6 +115,7 @@ export const Success = ({ calendar }) => {
   </pre>
   </details>
   <AddEvent events={events} setEvents={setEvents} />
+  Events Total: {events.length}
   <Calendar
           localizer={localizer}
           events={events}

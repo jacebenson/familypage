@@ -51,22 +51,7 @@ const CalendarPage = () => {
   return (
     <>
       <MetaTags title="Calendar" description="Calendar page" />
-
-      <h1>CalendarPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/CalendarPage/CalendarPage.jsx</code>
-      </p>
-      <p>
-        My default route is named <code>calendar</code>, link to me with `
-        <Link to={routes.calendar()}>Calendar</Link>`
-      </p>
-
-
-      <div>
-        <AddEvent />
-        {/*when i clcik on the event, goto event/3 */}
-        <CalendarCell />
-      </div>
+      <CalendarCell />
     </>
   )
 }

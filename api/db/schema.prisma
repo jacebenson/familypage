@@ -12,14 +12,15 @@ generator client {
 // to create migrations for them and apply to your dev DB.
 // TODO: Please remove the following example:
 model User {
-  id                String      @id @default(cuid())
-  email             String      @unique
+  id                String         @id @default(cuid())
+  email             String         @unique
   name              String?
   salt              String
   hashedPassword    String
   resetToken        String?
   resetTokenExpires String?
   UserEvent         UserEvent[]
+  FamilyMember      FamilyMember[]
 }
 
 model Event {
@@ -44,4 +45,20 @@ model UserEvent {
   eventId String
   user    User   @relation(fields: [userId], references: [id])
   event   Event  @relation(fields: [eventId], references: [id])
+}
+
+model Family {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  FamilyMember FamilyMember[]
+}
+
+model FamilyMember {
+  id              String  @id @default(cuid())
+  familyId        String
+  userId          String
+  headOfHousehold Boolean @default(false)
+  family          Family  @relation(fields: [familyId], references: [id])
+  user            User    @relation(fields: [userId], references: [id])
 }

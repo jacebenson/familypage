@@ -21,12 +21,13 @@ const HomePage = () => {
   return (
     <>
       <MetaTags title="Home" description="Home page" />
+
       <Container maxW={'3xl'}>
         <Stack
           as={Box}
           textAlign={'center'}
           spacing={{ base: 8, md: 14 }}
-          py={{ base: 20, md: 36 }}>
+          py={{ base: 10, md: 20 }}>
           <Heading
             fontWeight={600}
             fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
@@ -77,6 +78,8 @@ const HomePage = () => {
               ]}
               CTALink={routes.signup()}
               CTAText={"Sign up"}
+              CTA2Link={routes.login()}
+              CTA2Text={"Log in"}
             />
             <Spacer />
           </Flex>
@@ -84,8 +87,7 @@ const HomePage = () => {
 
       </Container>
       {/*Flex to allow 2 cards centered using chakra ui* */}
-
-      <ul>
+      {/*<ul>
         <li>
           <p>🚧Update addEvent to create events</p>
         </li>
@@ -107,8 +109,7 @@ const HomePage = () => {
         <li>
           <p>⛔update calendar to be filterable by event tags, organizer</p>
         </li>
-      </ul>
-      <AddEvent />
+      </ul>*/}
     </>
   )
 }

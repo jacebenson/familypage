@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 
-const Card = ({title, price, frequency, features, CTAText, CTALink}) => {
+const Card = ({title, price, frequency, features, CTAText, CTALink, CTA2Text, CTA2Link}) => {
   if (!title) { title = 'TITLE NOT DEFINED' }
   if (!price) { price = 5.99 }
   if (!frequency) { frequency = 'month' }
@@ -86,6 +86,25 @@ const Card = ({title, price, frequency, features, CTAText, CTALink}) => {
             }}>
             {CTAText}
           </Button>
+          {CTA2Text && (
+            <Button
+              as={'a'}
+              href={CTA2Link}
+              mt={10}
+              w={'full'}
+              bg={'green.400'}
+              color={'white'}
+              rounded={'xl'}
+              boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+              _hover={{
+                bg: 'green.500',
+              }}
+              _focus={{
+                bg: 'green.500',
+              }}>
+              {CTA2Text}
+            </Button>
+          )}
         </Box>
       </Box>
     </Center>

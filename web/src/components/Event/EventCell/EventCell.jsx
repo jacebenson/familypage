@@ -15,6 +15,7 @@ export const QUERY = gql`
       start
       duration
       geo
+      familyId
     }
   }
 `

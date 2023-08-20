@@ -4,6 +4,7 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
 import AddEvent from '../AddEvent/AddEvent';
+import { useAuth } from 'src/auth'
 const localizer = momentLocalizer(moment)
 
 let openModal = (event) => {
@@ -42,8 +43,8 @@ let openModal = (event) => {
 }
 
 export const QUERY = gql`
-  query FindCalendarQuery {
-    calendar: events {
+  query FindCalendarQuery($familyId: String!) {
+    calendar: eventsByFamily(familyId: $familyId) {
       id
       title
       description
@@ -59,13 +60,13 @@ export const QUERY = gql`
     }
   }
 `
-/*
+
 export const beforeQuery = (props) => {
   return {
-    variables: props,
+    variables: { familyId: props?.familyId },
     fetchPolicy: 'no-cache',
   }
-}*/
+}
 
 export const Loading = () => <div>Loading...</div>
 
@@ -73,7 +74,7 @@ export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({ calendar }) => {
+export const Success = ({ calendar, familyId }) => {
   let [events, setEvents] = useState([])
   let [newEvent, setNewEvent] = useState(null)
   useEffect(() => {
@@ -129,7 +130,12 @@ export const Success = ({ calendar }) => {
         {JSON.stringify(calendar, null, ' ')}
       </pre>
     </details>
-    <AddEvent newEvent={newEvent} setNewEvent={setNewEvent} query={QUERY} />
+    <AddEvent
+      newEvent={newEvent}
+      setNewEvent={setNewEvent}
+      query={QUERY}
+      familyId={familyId}
+    />
     Events Total: {events.length}
     <Calendar
       localizer={localizer}

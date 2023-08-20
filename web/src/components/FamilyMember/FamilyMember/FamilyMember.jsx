@@ -52,8 +52,12 @@ const FamilyMember = ({ familyMember }) => {
               <td>{familyMember.userId}</td>
             </tr>
             <tr>
-              <th>Head of household</th>
-              <td>{checkboxInputTag(familyMember.headOfHousehold)}</td>
+              <th>Admin</th>
+              <td>{checkboxInputTag(familyMember.admin)}</td>
+            </tr>
+            <tr>
+              <th>Invite code</th>
+              <td>{familyMember.inviteCode}</td>
             </tr>
           </tbody>
         </table>

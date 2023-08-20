@@ -33,4 +33,7 @@ export const Family = {
   FamilyMember: (_obj, { root }) => {
     return db.family.findUnique({ where: { id: root?.id } }).FamilyMember()
   },
+  Event: (_obj, { root }) => {
+    return db.family.findUnique({ where: { id: root?.id } }).Event()
+  },
 }

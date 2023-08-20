@@ -26,7 +26,22 @@ export const getCurrentUser = async (session) => {
 
   return await db.user.findUnique({
     where: { id: session.id },
-    select: { id: true, name: true },
+    // we need to grab the family memberships too
+    select: {
+      id: true,
+      name: true,
+      FamilyMember: {
+        select: {
+          admin: true,
+          Family: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        }
+      }
+    },
   })
 }
 

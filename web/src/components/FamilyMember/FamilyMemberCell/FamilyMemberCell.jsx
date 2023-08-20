@@ -6,7 +6,8 @@ export const QUERY = gql`
       id
       familyId
       userId
-      headOfHousehold
+      admin
+      inviteCode
     }
   }
 `

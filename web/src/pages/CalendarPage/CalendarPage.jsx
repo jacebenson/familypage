@@ -3,6 +3,7 @@ import { MetaTags } from '@redwoodjs/web'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import CalendarCell from 'src/components/CalendarCell'
+import { useAuth } from 'src/auth'
 /*
 
 lets import the css
@@ -48,10 +49,13 @@ let openModal = (event) => {
   )
 }
 const CalendarPage = () => {
+  /// get ht euser
+  const { currentUser } = useAuth()
+  let familyId = currentUser?.FamilyMember[0]?.Family?.id
   return (
     <>
       <MetaTags title="Calendar" description="Calendar page" />
-      <CalendarCell />
+      <CalendarCell familyId={familyId} />
     </>
   )
 }

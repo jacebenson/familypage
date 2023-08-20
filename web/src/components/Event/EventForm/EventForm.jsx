@@ -215,6 +215,23 @@ const EventForm = (props) => {
 
         <FieldError name="geo" className="rw-field-error" />
 
+        <Label
+          name="familyId"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Family id
+        </Label>
+
+        <TextField
+          name="familyId"
+          defaultValue={props.event?.familyId}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+
+        <FieldError name="familyId" className="rw-field-error" />
+
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save

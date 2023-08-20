@@ -12,10 +12,14 @@ export const schema = gql`
     start: String!
     duration: String!
     geo: String
+    UserEvent: [UserEvent]!
+    Family: Family
+    familyId: String
   }
 
   type Query {
     events: [Event!]! @requireAuth
+    eventsByFamily(familyId: String!): [Event!]! @requireAuth
     event(id: String!): Event @requireAuth
   }
 
@@ -31,6 +35,7 @@ export const schema = gql`
     start: String!
     duration: String!
     geo: String
+    familyId: String
   }
 
   input UpdateEventInput {
@@ -45,6 +50,7 @@ export const schema = gql`
     start: String
     duration: String
     geo: String
+    familyId: String
   }
 
   type Mutation {

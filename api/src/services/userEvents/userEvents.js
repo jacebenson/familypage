@@ -30,10 +30,10 @@ export const deleteUserEvent = ({ id }) => {
 }
 
 export const UserEvent = {
-  user: (_obj, { root }) => {
-    return db.userEvent.findUnique({ where: { id: root?.id } }).user()
+  User: (_obj, { root }) => {
+    return db.userEvent.findUnique({ where: { id: root?.id } }).User()
   },
-  event: (_obj, { root }) => {
-    return db.userEvent.findUnique({ where: { id: root?.id } }).event()
+  Event: (_obj, { root }) => {
+    return db.userEvent.findUnique({ where: { id: root?.id } }).Event()
   },
 }

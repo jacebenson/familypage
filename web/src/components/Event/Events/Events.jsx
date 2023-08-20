@@ -51,6 +51,7 @@ const EventsList = ({ events }) => {
             <th>Start</th>
             <th>Duration</th>
             <th>Geo</th>
+            <th>Family id</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -69,6 +70,7 @@ const EventsList = ({ events }) => {
               <td>{truncate(event.start)}</td>
               <td>{truncate(event.duration)}</td>
               <td>{truncate(event.geo)}</td>
+              <td>{truncate(event.familyId)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

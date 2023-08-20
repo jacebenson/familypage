@@ -20,6 +20,7 @@ export const QUERY = gql`
       start
       duration
       geo
+      familyId
     }
   }
 `
@@ -38,6 +39,7 @@ const UPDATE_EVENT_MUTATION = gql`
       start
       duration
       geo
+      familyId
     }
   }
 `

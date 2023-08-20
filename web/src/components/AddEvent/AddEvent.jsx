@@ -7,7 +7,7 @@ import { toast } from '@redwoodjs/web/toast'
 import { CREATE_EVENT_MUTATION } from 'src/components/Event/NewEvent/NewEvent'
 import { titleCase } from 'src/lib/titleCase'
 import { Box, Button, Flex, Input } from '@chakra-ui/react'
-const AddEvent = ({newEvent, setNewEvent, query}) => {
+const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
   // the idea here is to have a single text input
   // that parses the date/time and event name
   // and then adds it to the calendar
@@ -82,6 +82,7 @@ const AddEvent = ({newEvent, setNewEvent, query}) => {
       busyStatus: 'BUSY',
       organizer: {name: 'Family Calendar', email: ''},
       attendees: [],
+      familyId
     }
     setEventICSObject(setUpEventICSObject)
   }

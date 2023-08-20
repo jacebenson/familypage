@@ -64,20 +64,4 @@ export const Success = ({ profile }) => {
       </div>
     </div>
   )
-
-  return (
-  <Box
-    as="form"
-    onSubmit={(e) => {
-      e.preventDefault()
-      console.log('form submitted')
-      onSave({name: e.target[0].value, email: e.target[1].value}, profile.id)
-
-    }}
-  >
-  <pre>{JSON.stringify(profile)}</pre>
-      <Input placeholder="name" defaultValue={profile.name}/>
-      <Input placeholder="email" defaultValue={profile.email} />
-      <Button type="submit">Submit</Button>
-  </Box>)
 }

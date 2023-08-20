@@ -2,8 +2,14 @@ export const standard = defineScenario({
   userEvent: {
     one: {
       data: {
-        user: { create: { email: 'String3079309' } },
-        event: {
+        User: {
+          create: {
+            email: 'String5180520',
+            salt: 'String',
+            hashedPassword: 'String',
+          },
+        },
+        Event: {
           create: {
             title: 'String',
             status: 'String',
@@ -17,8 +23,14 @@ export const standard = defineScenario({
     },
     two: {
       data: {
-        user: { create: { email: 'String9237939' } },
-        event: {
+        User: {
+          create: {
+            email: 'String2088122',
+            salt: 'String',
+            hashedPassword: 'String',
+          },
+        },
+        Event: {
           create: {
             title: 'String',
             status: 'String',

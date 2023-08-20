@@ -1,5 +1,14 @@
 import { db } from 'src/lib/db'
 
+export const eventsByFamily = async ({ familyId }) => {
+  if (!familyId) return []
+  let events = await db.event.findMany({
+    where: { familyId },
+  })
+  return events
+}
+
+
 export const events = () => {
   return db.event.findMany()
 }
@@ -27,4 +36,13 @@ export const deleteEvent = ({ id }) => {
   return db.event.delete({
     where: { id },
   })
+}
+
+export const Event = {
+  UserEvent: (_obj, { root }) => {
+    return db.event.findUnique({ where: { id: root?.id } }).UserEvent()
+  },
+  Family: (_obj, { root }) => {
+    return db.event.findUnique({ where: { id: root?.id } }).Family()
+  },
 }

@@ -37,14 +37,16 @@ model Event {
   duration    String
   geo         String?
   UserEvent   UserEvent[]
+  Family      Family?     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  familyId    String?
 }
 
 model UserEvent {
   id      String @id @default(cuid())
   userId  String
   eventId String
-  user    User   @relation(fields: [userId], references: [id])
-  event   Event  @relation(fields: [eventId], references: [id])
+  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Family {
@@ -52,13 +54,15 @@ model Family {
   name         String
   description  String?
   FamilyMember FamilyMember[]
+  Event        Event[]
 }
 
 model FamilyMember {
-  id              String  @id @default(cuid())
-  familyId        String
-  userId          String
-  headOfHousehold Boolean @default(false)
-  family          Family  @relation(fields: [familyId], references: [id])
-  user            User    @relation(fields: [userId], references: [id])
+  id         String  @id @default(cuid())
+  familyId   String
+  userId     String
+  admin      Boolean @default(false)
+  inviteCode String
+  Family     Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  User       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

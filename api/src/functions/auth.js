@@ -172,7 +172,7 @@ export const handler = async (event, context) => {
 
     // See https://redwoodjs.com/docs/authentication/dbauth#webauthn for options
     webAuthn: {
-      enabled: true,
+      enabled: false,
       // How long to allow re-auth via WebAuthn in seconds (default is 10 years).
       // The `login.expires` time denotes how many seconds before a user will be
       // logged out, and this value is how long they'll be to continue to use a

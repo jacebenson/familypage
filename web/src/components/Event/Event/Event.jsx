@@ -87,6 +87,10 @@ const Event = ({ event }) => {
               <th>Geo</th>
               <td>{event.geo}</td>
             </tr>
+            <tr>
+              <th>Family id</th>
+              <td>{event.familyId}</td>
+            </tr>
           </tbody>
         </table>
       </div>

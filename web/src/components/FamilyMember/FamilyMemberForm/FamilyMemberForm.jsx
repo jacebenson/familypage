@@ -60,21 +60,39 @@ const FamilyMemberForm = (props) => {
         <FieldError name="userId" className="rw-field-error" />
 
         <Label
-          name="headOfHousehold"
+          name="admin"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Head of household
+          Admin
         </Label>
 
         <CheckboxField
-          name="headOfHousehold"
-          defaultChecked={props.familyMember?.headOfHousehold}
+          name="admin"
+          defaultChecked={props.familyMember?.admin}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
         />
 
-        <FieldError name="headOfHousehold" className="rw-field-error" />
+        <FieldError name="admin" className="rw-field-error" />
+
+        <Label
+          name="inviteCode"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Invite code
+        </Label>
+
+        <TextField
+          name="inviteCode"
+          defaultValue={props.familyMember?.inviteCode}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="inviteCode" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

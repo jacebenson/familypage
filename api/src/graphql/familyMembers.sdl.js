@@ -3,31 +3,44 @@ export const schema = gql`
     id: String!
     familyId: String!
     userId: String!
-    headOfHousehold: Boolean!
-    family: Family!
-    user: User!
+    admin: Boolean!
+    inviteCode: String!
+    Family: Family!
+    User: User!
   }
 
   type Query {
     familyMembers: [FamilyMember!]! @requireAuth
+    familyMembersByFamily(familyId: String): [FamilyMember!]! @requireAuth
     familyMember(id: String!): FamilyMember @requireAuth
   }
 
   input CreateFamilyMemberInput {
     familyId: String!
     userId: String!
-    headOfHousehold: Boolean!
+    admin: Boolean!
+    inviteCode: String!
   }
 
   input UpdateFamilyMemberInput {
     familyId: String
     userId: String
-    headOfHousehold: Boolean
+    admin: Boolean
+    inviteCode: String
+  }
+
+  input CreateMemberInviteInput {
+    email: String!
+    familyId: String!
   }
 
   type Mutation {
-    createFamilyMember(input: CreateFamilyMemberInput!): FamilyMember!
-      @requireAuth
+    createMemberInvite(
+      input: CreateMemberInviteInput!
+    ): FamilyMember @requireAuth
+    createFamilyMember(
+      input: CreateFamilyMemberInput!
+    ): FamilyMember! @requireAuth
     updateFamilyMember(
       id: String!
       input: UpdateFamilyMemberInput!

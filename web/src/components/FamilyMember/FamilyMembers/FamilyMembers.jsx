@@ -42,7 +42,8 @@ const FamilyMembersList = ({ familyMembers }) => {
             <th>Id</th>
             <th>Family id</th>
             <th>User id</th>
-            <th>Head of household</th>
+            <th>Admin</th>
+            <th>Invite code</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -52,7 +53,8 @@ const FamilyMembersList = ({ familyMembers }) => {
               <td>{truncate(familyMember.id)}</td>
               <td>{truncate(familyMember.familyId)}</td>
               <td>{truncate(familyMember.userId)}</td>
-              <td>{checkboxInputTag(familyMember.headOfHousehold)}</td>
+              <td>{checkboxInputTag(familyMember.admin)}</td>
+              <td>{truncate(familyMember.inviteCode)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

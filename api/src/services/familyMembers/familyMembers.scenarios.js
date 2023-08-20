@@ -2,10 +2,11 @@ export const standard = defineScenario({
   familyMember: {
     one: {
       data: {
-        family: { create: { name: 'String' } },
-        user: {
+        inviteCode: 'String',
+        Family: { create: { name: 'String' } },
+        User: {
           create: {
-            email: 'String3606065',
+            email: 'String8919493',
             salt: 'String',
             hashedPassword: 'String',
           },
@@ -14,10 +15,11 @@ export const standard = defineScenario({
     },
     two: {
       data: {
-        family: { create: { name: 'String' } },
-        user: {
+        inviteCode: 'String',
+        Family: { create: { name: 'String' } },
+        User: {
           create: {
-            email: 'String647320',
+            email: 'String5499943',
             salt: 'String',
             hashedPassword: 'String',
           },

@@ -30,11 +30,13 @@ describe('familyMembers', () => {
       input: {
         familyId: scenario.familyMember.two.familyId,
         userId: scenario.familyMember.two.userId,
+        inviteCode: 'String',
       },
     })
 
     expect(result.familyId).toEqual(scenario.familyMember.two.familyId)
     expect(result.userId).toEqual(scenario.familyMember.two.userId)
+    expect(result.inviteCode).toEqual('String')
   })
 
   scenario('updates a familyMember', async (scenario) => {
@@ -43,10 +45,10 @@ describe('familyMembers', () => {
     })
     const result = await updateFamilyMember({
       id: original.id,
-      input: { familyId: scenario.familyMember.two.familyId },
+      input: { inviteCode: 'String2' },
     })
 
-    expect(result.familyId).toEqual(scenario.familyMember.two.familyId)
+    expect(result.inviteCode).toEqual('String2')
   })
 
   scenario('deletes a familyMember', async (scenario) => {

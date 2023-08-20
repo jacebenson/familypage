@@ -30,8 +30,8 @@ let openModal = (event) => {
   dialog.style.width = '50%'
   dialog.innerHTML = `
     <h1>${event.title}</h1>
-    <p>${event.start.toLocaleString()}</p>
-    <p>${event.end.toLocaleString()}</p>
+    <p>${event.start?.toLocaleString()}</p>
+    <p>${event.end?.toLocaleString()}</p>
     <button>Close</button>
   `
   document.body.appendChild(dialog)
@@ -59,74 +59,91 @@ export const QUERY = gql`
     }
   }
 `
+/*
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    fetchPolicy: 'no-cache',
+  }
+}*/
 
 export const Loading = () => <div>Loading...</div>
 
-/*export const Empty = () => (<>
-
-  <AddEvent events={[]} setEvents={(data)=>{}} />
-
-  <Calendar
-          localizer={localizer}
-          events={[]}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
-          onSelectEvent={(event) => {
-            console.log(event)
-            // lets open a modal here
-            openModal(event)
-          }}
-        />
-</>)
-*/
 export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
 export const Success = ({ calendar }) => {
   let [events, setEvents] = useState([])
+  let [newEvent, setNewEvent] = useState(null)
   useEffect(() => {
-    console.log('calendar', calendar)
-    // lets convert the calendar to a list of events
-    calendar.forEach((event) => {
-      let start = JSON.parse(event.start)
-      let [year, month, day, hour, minute] = start
-      let startObj = new Date(year, month, day, hour, minute)
-      let duration = JSON.parse(event.duration)
-      let endObj = new Date(startObj)
-      if(duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
-      endObj.setMinutes(startObj.getMinutes() + duration.minutes)
-      let eventObj = {
-        title: event.title,
-        start: startObj,
-        end: endObj,
-        allDay: false,
-        //id: event.id
-      }
-      events.push(eventObj)
+    console.log({
+      events,
+      calendar
     })
-  }), [events]
+    // lets convert the calendar to a list of events
+    // we may have already done this
+    // so lets check if events is empty
+    if (events.length == 0) {
+      // we have not converted the calendar to a list of events
+      let localEvents = calendar.map((event) => {
+        let start = JSON.parse(event.start)
+        let [year, month, day, hour, minute] = start
+        let startObj = new Date(year, month, day, hour, minute)
+        let duration = JSON.parse(event.duration)
+        let endObj = new Date(startObj)
+        if (duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
+        endObj.setMinutes(startObj.getMinutes() + duration.minutes)
+        let eventObj = {
+          title: event.title,
+          start: startObj,
+          end: endObj,
+          allDay: false,
+          //id: event.id
+        }
+        return eventObj
+      })
+      setEvents(localEvents)
+    }
+    // if newEvent is not null, then we need to add it to the list of events
+    // we'll need to first ensure its not already in the list
+    if (events.length > 0 && newEvent) {
+      let eventExists = events.find((event) => {
+        // we need to cehck title and start
+        return event.title == newEvent.title && event.start == newEvent.start
+      })
+      if (!eventExists) {
+        // we need to add the new event to the list of events
+        setEvents([...events, newEvent])
+      }
+    }
+
+    //setEvents(events)
+    //setNewEvent(null)
+
+  }), [events, newEvent, calendar]
 
   return <div>
-  <details>
-  <pre style={{whiteSpace: "pre", display: "block"}}>
-    {JSON.stringify(calendar, null, ' ')}
-  </pre>
-  </details>
-  <AddEvent events={events} setEvents={setEvents} />
-  Events Total: {events.length}
-  <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
-          onSelectEvent={(event) => {
-            console.log(event)
-            // lets open a modal here
-            openModal(event)
-          }}
-        />
+    <details>
+      <pre style={{ whiteSpace: "pre", display: "block" }}>
+        {JSON.stringify(calendar, null, ' ')}
+      </pre>
+    </details>
+    <AddEvent newEvent={newEvent} setNewEvent={setNewEvent} query={QUERY} />
+    Events Total: {events.length}
+    <Calendar
+      localizer={localizer}
+      events={events}
+      startAccessor="start"
+      endAccessor="end"
+      // make the height the highest possible - the height of the header
+
+      style={{ height: 'calc(100vh - 250px)' }}
+      onSelectEvent={(event) => {
+        console.log(event)
+        // lets open a modal here
+        openModal(event)
+      }}
+    />
   </div>
 }

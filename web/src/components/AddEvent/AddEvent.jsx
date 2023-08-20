@@ -7,7 +7,7 @@ import { toast } from '@redwoodjs/web/toast'
 import { CREATE_EVENT_MUTATION } from 'src/components/Event/NewEvent/NewEvent'
 import { titleCase } from 'src/lib/titleCase'
 import { Box, Button, Flex, Input } from '@chakra-ui/react'
-const AddEvent = ({events, setEvents}) => {
+const AddEvent = ({newEvent, setNewEvent, query}) => {
   // the idea here is to have a single text input
   // that parses the date/time and event name
   // and then adds it to the calendar
@@ -84,43 +84,33 @@ const AddEvent = ({events, setEvents}) => {
       attendees: [],
     }
     setEventICSObject(setUpEventICSObject)
-    let buildCalendarEvent = ''
   }
   const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION, {
     onCompleted: (result) => {
       toast.success('Event created')
-      console.log({result})
       setEventString('')
-      // append the event to the events array
-      let newList = JSON.stringify(events)
-      newList = JSON.parse(newList)
-      console.log([...newList, {...eventICSObject}])
-      // lets make a new event object with
-      // start
-      // end
-      // title
-      // allDay
-      // from the eventICSObject
-      // .start needs to be converted to a ISOdatestring form [2023,7,17,22,0]
-      // .end needs to be calculated from the duration
-      // duration is { "hours", "minutes" }
       let startDate = JSON.parse(eventICSObject.start)
       startDate = new Date(startDate[0], startDate[1], startDate[2], startDate[3], startDate[4])
       let endDate = new Date(startDate)
       let duration = JSON.parse(eventICSObject.duration)
-      if(duration.hours) endDate.setHours(endDate.getHours() + duration.hours)
-      if(duration.minutes) endDate.setMinutes(endDate.getMinutes() + duration.minutes)
+      if(duration?.hours) endDate.setHours(endDate.getHours() + duration.hours)
+      if(duration?.minutes) endDate.setMinutes(endDate.getMinutes() + duration.minutes)
+      console.log({
+        startDate: startDate.toISOString(),
+        endDate,
+        duration,
+      })
       let newEvent = {
-        start: startDate.toISOString(),
-        end: endDate.toISOString(),
+        start: startDate,//.toISOString(),
+        end: endDate,//.toISOString(),
         title: eventICSObject.title,
         allDay: false,
       }
-      newList.push(newEvent)
-      setEvents(newList)
-      console.table(events)
-      console.table(newList)
+      setNewEvent(newEvent)
     },
+
+    //refetchQueries: [{query: query}],
+    //refetch query and set the events to it
   })
   const onSubmit = (data) => {
     // eek the data needs to be massaged

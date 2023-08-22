@@ -23,13 +23,13 @@ export const getCurrentUser = async (session) => {
   if (!session || typeof session.id !== 'string') {
     throw new Error('Invalid session')
   }
-
-  return await db.user.findUnique({
+  let user = await db.user.findUnique({
     where: { id: session.id },
     // we need to grab the family memberships too
     select: {
       id: true,
       name: true,
+      email: true,
       FamilyMember: {
         select: {
           admin: true,
@@ -43,6 +43,7 @@ export const getCurrentUser = async (session) => {
       }
     },
   })
+  return user
 }
 
 /**

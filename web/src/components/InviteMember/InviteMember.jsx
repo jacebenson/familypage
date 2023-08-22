@@ -22,9 +22,9 @@ const InviteMember = ({familyId}, props) => {
   // create a familyMember with the user id and family id
 
   const [createInvite, { loading, error }] = useMutation(CREATE_INVITE_MUTATION, {
-    onCompleted: () => {
+    onCompleted: (data) => {
       toast.success('Invite sent')
-      navigate(routes.myProfile())
+      navigate(routes.calendar())
     },
     onError: (error) => {
       toast.error(error.message)

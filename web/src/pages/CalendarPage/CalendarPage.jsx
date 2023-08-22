@@ -3,6 +3,7 @@ import { MetaTags } from '@redwoodjs/web'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import CalendarCell from 'src/components/CalendarCell'
+import SetFamily from 'src/components/SetFamily/SetFamily'
 import { useAuth } from 'src/auth'
 /*
 
@@ -55,7 +56,8 @@ const CalendarPage = () => {
   return (
     <>
       <MetaTags title="Calendar" description="Calendar page" />
-      <CalendarCell familyId={familyId} />
+      {!familyId && <SetFamily /> }
+      {familyId && <CalendarCell familyId={familyId} />}
     </>
   )
 }

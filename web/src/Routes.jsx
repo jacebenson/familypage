@@ -20,11 +20,12 @@ const Routes = () => {
       <Route path="/" page={HomePage} name="home" />
       <Set wrap={HomeLayout}>
         <Route notfound page={NotFoundPage} />
-
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+        <Route path="/join-family" page={JoinFamilyPage} name="joinFamily" />
+        <Route path="/invite-to-family" page={InviteToFamilyPage} name="inviteToFamily" />
         <Private unauthenticated="home">
           <Route path="/calendar" page={CalendarPage} name="calendar" />
           <Route path="/my-profile" page={MyProfilePage} name="myProfile" />

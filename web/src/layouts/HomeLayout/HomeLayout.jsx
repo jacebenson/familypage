@@ -87,18 +87,10 @@ return (
               />
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={()=>{navigate(routes.myProfile())}}>Profile</MenuItem>
+            <MenuItem onClick={()=>{navigate(routes.myProfile())}}>Profile</MenuItem>
+            <MenuItem onClick={()=>{navigate(routes.inviteToFamily())}}>Invite Others</MenuItem>
               <MenuDivider />
               <MenuItem onClick={()=>{logOut()}}>Log out</MenuItem>
-              <MenuDivider />
-              <MenuItem>
-                <details open>
-                  <summary>Debug</summary>
-                  <pre>
-                  {JSON.stringify(currentUser, null, 2)}
-                  </pre>
-                </details>
-              </MenuItem>
             </MenuList>
             </>
           )}

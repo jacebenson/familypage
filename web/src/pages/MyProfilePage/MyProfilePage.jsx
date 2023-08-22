@@ -15,7 +15,6 @@ const MyProfilePage = () => {
       <MetaTags title="MyProfile" description="MyProfile page" />
 
       <ProfileCell id={currentUser.id} />
-      <FamilyMembersCell familyId={familyId} />
     </>
   )
 }

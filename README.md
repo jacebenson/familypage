@@ -20,12 +20,13 @@
 - [x] When adding the first event on your calendar, it doesn't show up until you refresh the page
   - [x] When a family is created, lets create an event "FamilyPage Created"
 
-- [ ] When you signup, you should land on the /calendar page
-- [ ] On the "GetInvited" call to action button, change the text to be correct, today they are not exactly right
-- [ ] The "families" and "events" are not hidden from everyone.
-- [ ] On the home page, add a link to "Join a family" under the hosted version
-- [ ] Wire up emails for invites, and password resets
+- [ ] Bug: When you signup, you should land on the /calendar page
+- [ ] Bug: On the "GetInvited" call to action button, change the text to be correct, today they are not exactly right
+- [ ] Bug: The "families" and "events" are not hidden from everyone.
+- [ ] Bug: On the home page, add a link to "Join a family" under the hosted version
 
-- [ ] Build a UI to show how to add this page as a "app" on your phone, and computer (will take time, but this is just a pretty page) (large)
-- [ ] Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)
-- [ ] Build a UI to walk through connecting an iPhone to the calendars
+- [ ] MVP: Build a UI to show how to add this page as a "app" on your phone, and computer (will take time, but this is just a pretty page) (large)
+- [ ] MVP: Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)
+- [ ] MVP: Build a UI to walk through connecting an iPhone to the calendars
+
+- [ ] Wire up emails for invites, and password resets

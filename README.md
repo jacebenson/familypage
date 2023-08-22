@@ -2,6 +2,9 @@
 
 ## TODO
 
+Follow along on my video journal
+[![image](https://github.com/jacebenson/familypage/assets/638764/4cf50630-32a6-421f-80d0-4ea5ebba1563)](https://www.youtube.com/playlist?list=PLiMstOldZgCcnR2m4QLB743eLdeIap70o)
+
 - [x] Add table scheme for the family unit (small)
 - [x] Fixed issue when adding event, it doesn't show on the calendar immediately (has to do with state)
 - [x] Update table scheme for the events to add family unit (so we can limit what events folks see) (extrasmall)

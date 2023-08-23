@@ -31,7 +31,6 @@ export const schema = gql`
 
   input CreateMemberInviteInput {
     email: String!
-    familyId: String!
   }
 
   type Mutation {

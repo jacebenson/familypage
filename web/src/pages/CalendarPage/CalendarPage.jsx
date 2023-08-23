@@ -49,15 +49,14 @@ let openModal = (event) => {
   }
   )
 }
-const CalendarPage = () => {
+const CalendarPage = (props) => {
   /// get ht euser
   const { currentUser } = useAuth()
-  let familyId = currentUser?.FamilyMember[0]?.Family?.id
+  let familyId = props.familyId || currentUser?.FamilyMember[0]?.Family?.id
   return (
     <>
       <MetaTags title="Calendar" description="Calendar page" />
-      {!familyId && <SetFamily /> }
-      {familyId && <CalendarCell familyId={familyId} />}
+      <CalendarCell familyId={familyId} />
     </>
   )
 }

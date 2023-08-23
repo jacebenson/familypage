@@ -18,10 +18,16 @@ export const familyMembersByFamily = async ({familyId}) => {
 
 export const createMemberInvite = async ({ input }) => {
   console.log({ message: 'Running createMemberInvite', input })
-  let { email, familyId } = input
+  let { email } = input
+  // get the logged in user's familyId
+  let family = await db.familyMember.findFirst({
+    where: { userId: context.currentUser.id },
+  })
+  let familyId = family?.familyId
   console.log({
     message: 'Running createMemberInvite with email and familyId',
-    input
+    input,
+    familyId,
   })
   if(!email) return null
   let user = await db.user.findUnique({

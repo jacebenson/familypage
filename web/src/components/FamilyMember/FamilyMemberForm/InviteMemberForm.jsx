@@ -42,7 +42,7 @@ const FamilyMemberForm = (props) => {
         />
 
         <FieldError name="email" className="rw-field-error" />
-
+{/*
         <Label
           name="familyId"
           className="rw-label"
@@ -61,7 +61,7 @@ const FamilyMemberForm = (props) => {
         />
 
         <FieldError name="familyId" className="rw-field-error" />
-
+*/}
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save

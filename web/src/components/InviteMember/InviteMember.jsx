@@ -4,8 +4,8 @@ import { toast } from "@redwoodjs/web/toast"
 import InviteMemberForm from "src/components/FamilyMember/FamilyMemberForm/InviteMemberForm"
 import { navigate, routes } from "@redwoodjs/router"
 let CREATE_INVITE_MUTATION = gql`
-    mutation createMemberInvite($email: String!, $familyId: String!) {
-      createMemberInvite(input: {email: $email, familyId: $familyId}) {
+    mutation createMemberInvite($email: String!) {
+      createMemberInvite(input: {email: $email}) {
         id
         familyId
         userId
@@ -16,7 +16,7 @@ let CREATE_INVITE_MUTATION = gql`
   `
 
 
-const InviteMember = ({familyId}, props) => {
+const InviteMember = ({familyId, refresh}) => {
   // this is a single text input field that will
   // create a user with the email address entered
   // create a familyMember with the user id and family id
@@ -35,6 +35,7 @@ const InviteMember = ({familyId}, props) => {
       method: 'InviteMember.onSave',
       input })
     createInvite({ variables: { ...input } })
+
   }
 
 
@@ -45,7 +46,7 @@ const InviteMember = ({familyId}, props) => {
         <h2 className="rw-heading rw-heading-secondary">Invite FamilyMember</h2>
       </header>
       <div className="rw-segment-main">
-        <InviteMemberForm onSave={onSave} loading={loading} error={error} />
+      <InviteMemberForm onSave={onSave} loading={loading} error={error} />
       </div>
     </div>
     </div>

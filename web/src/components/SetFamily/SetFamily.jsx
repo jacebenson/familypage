@@ -26,6 +26,7 @@ import {
   ModalBody,
   ModalFooter
 } from '@chakra-ui/react'
+import NewFamilyModal from "../Family/NewFamily/NewFamilyModal"
 
 const JOIN_IMAGE = '/krzysztof-kowalik-Cc1RmGnf20E-unsplash.jpg'
 
@@ -122,7 +123,7 @@ let joinForm = () => {
         cta="Get Invited"
         image={JOIN_IMAGE}
         modalContent={<Text>Tell the admin of your family to to goto their profile page
-      and type in you're email address ({currentUser.email}) to get a code to join</Text>}
+      and type in you're email address ({currentUser.email}) to add you to their family.</Text>}
       />
     </>
   )
@@ -145,7 +146,7 @@ let createForm = () => {
       <Card
         cta="Create Family"
         image={CREATE_IMAGE}
-        modalContent={<NewFamily />}
+        modalContent={<NewFamilyModal redirect={"inviteToFamily"} />}
       />
     </>
   )

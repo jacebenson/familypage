@@ -80,6 +80,8 @@ const HomePage = () => {
               CTAText={"Sign up"}
               CTA2Link={routes.login()}
               CTA2Text={"Log in"}
+              CTA3Link={routes.joinFamily()}
+              CTA3Text={"Join a family"}
             />
             <Spacer />
           </Flex>

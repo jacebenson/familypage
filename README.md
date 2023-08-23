@@ -16,9 +16,14 @@ Follow along on my video journal
     - [x] I created a "Join Family" page that works the same as "reset" password, this will be part of the message shown/emailed
 
 - [ ] MVP: Build a UI to show how to add this page as a "app" on your phone, and computer (will take time, but this is just a pretty page) (large)
+  - [ ] Page: /install/{thing}
+    - [ ] Browser App on iPhone
+    - [ ] Browser App on Windows
 - [ ] MVP: Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)
 - [ ] MVP: Build a UI to walk through connecting an iPhone to the calendars
-
+  - [ ] Page: /connect/{mailApp}
+    - [ ] fastmail
+    - [ ] ios mail
 - [ ] Wire up emails for invites, and password resets
 
 ### Done

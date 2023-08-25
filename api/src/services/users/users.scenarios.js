@@ -1,6 +1,18 @@
 export const standard = defineScenario({
   user: {
-    one: { data: { email: 'String416085' } },
-    two: { data: { email: 'String9960301' } },
+    one: {
+      data: {
+        email: 'String7908882',
+        salt: 'String',
+        hashedPassword: 'String',
+      },
+    },
+    two: {
+      data: {
+        email: 'String5482400',
+        salt: 'String',
+        hashedPassword: 'String',
+      },
+    },
   },
 })

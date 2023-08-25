@@ -11,15 +11,27 @@ export const QUERY = gql`
       id
       email
       name
+      salt
+      hashedPassword
+      resetToken
+      resetTokenExpires
+      resetTokenExpiresAt
+      roles
     }
   }
 `
-export const UPDATE_USER_MUTATION = gql`
+const UPDATE_USER_MUTATION = gql`
   mutation UpdateUserMutation($id: String!, $input: UpdateUserInput!) {
     updateUser(id: $id, input: $input) {
       id
       email
       name
+      salt
+      hashedPassword
+      resetToken
+      resetTokenExpires
+      resetTokenExpiresAt
+      roles
     }
   }
 `

@@ -22,6 +22,7 @@ model User {
   resetTokenExpiresAt DateTime?
   UserEvent           UserEvent[]
   FamilyMember        FamilyMember[]
+  roles               String?        @default("user")
 }
 
 model Event {

@@ -89,6 +89,13 @@ return (
             <MenuList>
             <MenuItem onClick={()=>{navigate(routes.myProfile())}}>Profile</MenuItem>
             <MenuItem onClick={()=>{navigate(routes.inviteToFamily())}}>Invite Others</MenuItem>
+            {currentUser?.roles?.includes('admin') && (
+              <>
+              <MenuDivider />
+              <MenuItem onClick={()=>{navigate(routes.users())}}>Users</MenuItem>
+              <MenuItem onClick={()=>{navigate(routes.families())}}>Families</MenuItem>
+              </>
+            )}
               <MenuDivider />
               <MenuItem onClick={()=>{logOut()}}>Log out</MenuItem>
             </MenuList>

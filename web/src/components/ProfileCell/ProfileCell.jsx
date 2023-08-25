@@ -10,12 +10,15 @@ export const QUERY = gql`
       id
       name
       email
-
+      resetToken
+      resetTokenExpires
+      resetTokenExpiresAt
+      roles
     }
   }
 `
 export const UPDATE_USERPROFILE_MUTATION = gql`
-  mutation UpdateUserMutation($id: String!, $input: UpdateUserInput!) {
+  mutation ProfileUpdateUserMutation($id: String!, $input: UpdateUserInput!) {
     updateUser(id: $id, input: $input) {
       id
       email

@@ -154,7 +154,7 @@ let createForm = () => {
 // now each form will have to be submitted;
 // lets define the GQL for the join family
 const JOIN_FAMILY_MUTATION = gql`
-  mutation UpdateFamilyMemberMutation(
+  mutation JoinFamilyMemberMutation(
     $id: String!
     $input: UpdateFamilyMemberInput!
   ) {

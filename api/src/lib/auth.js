@@ -30,6 +30,7 @@ export const getCurrentUser = async (session) => {
       id: true,
       name: true,
       email: true,
+      roles: true,
       FamilyMember: {
         select: {
           admin: true,

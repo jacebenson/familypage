@@ -8373,6 +8373,7 @@ __metadata:
     "@redwoodjs/auth-dbauth-api": 6.1.0
     "@redwoodjs/graphql-server": 6.1.0
     "@simplewebauthn/server": ^7
+    ical.js: ^1.5.0
   languageName: unknown
   linkType: soft
 
@@ -14272,6 +14273,13 @@ __metadata:
   dependencies:
     decamelize: ^2.0.0
   checksum: a0ed69264b5069137afb369b46e18e8dbeb67edc7fb2ad1de18554108943e2fc59155f898013fb7a2f03522879adad7c9a93f1c88428844bcbee006c98db8f0a
+  languageName: node
+  linkType: hard
+
+"ical.js@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "ical.js@npm:1.5.0"
+  checksum: ea7afafbc3cbfae1ef3474ccb098f529187f8dd1e2d6c110e094179a4cc7b4b96c8700efd3fa46306774739cc3a96ad599d59e3df387f51c1f4f17e264617340
   languageName: node
   linkType: hard
 

@@ -3,6 +3,14 @@ export const schema = gql`
     id: String!
     email: String!
     name: String
+    salt: String!
+    hashedPassword: String!
+    resetToken: String
+    resetTokenExpires: String
+    resetTokenExpiresAt: DateTime
+    UserEvent: [UserEvent]!
+    FamilyMember: [FamilyMember]!
+    roles: String
   }
 
   type Query {
@@ -13,11 +21,23 @@ export const schema = gql`
   input CreateUserInput {
     email: String!
     name: String
+    salt: String!
+    hashedPassword: String!
+    resetToken: String
+    resetTokenExpires: String
+    resetTokenExpiresAt: DateTime
+    roles: String
   }
 
   input UpdateUserInput {
     email: String
     name: String
+    salt: String
+    hashedPassword: String
+    resetToken: String
+    resetTokenExpires: String
+    resetTokenExpiresAt: DateTime
+    roles: String
   }
 
   type Mutation {

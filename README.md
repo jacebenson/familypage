@@ -8,7 +8,6 @@ Follow along on my video journal
 
 ### In Progress
 
-- [ ] Bug: The "families" and "events" are not hidden from everyone.
 - [x] Add UI to allow folks to invite members to family and to requst to join a family (medium)
   - [x] Moved "invite" to it's own page
   - [x] Added console log to show reset link when user resets password
@@ -19,7 +18,8 @@ Follow along on my video journal
   - [ ] Page: /install/{thing}
     - [ ] Browser App on iPhone
     - [ ] Browser App on Windows
-- [ ] MVP: Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)
+~~- [ ] MVP: Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)~~ Not happening
+- [ ] MVP: Build a ics output for the calendars see (https://github.com/kewisch/ical.js/wiki/Creating-basic-iCalendar)
 - [ ] MVP: Build a UI to walk through connecting an iPhone to the calendars
   - [ ] Page: /connect/{mailApp}
     - [ ] fastmail
@@ -43,4 +43,4 @@ Follow along on my video journal
 - [x] Bug: On the "GetInvited" call to action button, change the text to be correct, today they are not exactly right
 - [x] Bug: On the home page, add a link to "Join a family" under the hosted version
 - [x] Bug: When you signup, if you select create a family, you land on the backend page for families, you should land on the calendar page
-
+- [x] Bug: The "families" and "events" are not hidden from everyone.

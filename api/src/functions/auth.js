@@ -1,6 +1,7 @@
 import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
 import { db } from 'src/lib/db'
+import { createUser } from 'src/services/users/users'
 
 export const handler = async (event, context) => {
   const forgotPasswordOptions = {
@@ -104,15 +105,24 @@ export const handler = async (event, context) => {
     //
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
-    handler: ({ username, hashedPassword, salt, userAttributes }) => {
-      return db.user.create({
-        data: {
+    handler: async ({ username, hashedPassword, salt, userAttributes }) => {
+      //return db.user.create({
+      //  data: {
+      //    email: username,
+      //    hashedPassword: hashedPassword,
+      //    salt: salt,
+      //    // name: userAttributes.name
+      //  },
+      //})
+      let user = await createUser({
+        input: {
           email: username,
           hashedPassword: hashedPassword,
           salt: salt,
           // name: userAttributes.name
-        },
+        }
       })
+      return user
     },
 
     // Include any format checks for password here. Return `true` if the

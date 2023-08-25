@@ -3,7 +3,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/User/UsersCell'
-import { truncate } from 'src/lib/formatters'
+import { timeTag, truncate } from 'src/lib/formatters'
 
 const DELETE_USER_MUTATION = gql`
   mutation DeleteUserMutation($id: String!) {
@@ -42,6 +42,10 @@ const UsersList = ({ users }) => {
             <th>Id</th>
             <th>Email</th>
             <th>Name</th>
+            <th>Reset token</th>
+            <th>Reset token expires</th>
+            <th>Reset token expires at</th>
+            <th>Roles</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -51,6 +55,10 @@ const UsersList = ({ users }) => {
               <td>{truncate(user.id)}</td>
               <td>{truncate(user.email)}</td>
               <td>{truncate(user.name)}</td>
+              <td>{truncate(user.resetToken)}</td>
+              <td>{truncate(user.resetTokenExpires)}</td>
+              <td>{timeTag(user.resetTokenExpiresAt)}</td>
+              <td>{truncate(user.roles)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

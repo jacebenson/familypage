@@ -2,7 +2,7 @@ import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import 'src/lib/formatters'
+import { timeTag } from 'src/lib/formatters'
 
 const DELETE_USER_MUTATION = gql`
   mutation DeleteUserMutation($id: String!) {
@@ -50,6 +50,30 @@ const User = ({ user }) => {
             <tr>
               <th>Name</th>
               <td>{user.name}</td>
+            </tr>
+            <tr>
+              <th>Salt</th>
+              <td>{user.salt}</td>
+            </tr>
+            <tr>
+              <th>Hashed password</th>
+              <td>{user.hashedPassword}</td>
+            </tr>
+            <tr>
+              <th>Reset token</th>
+              <td>{user.resetToken}</td>
+            </tr>
+            <tr>
+              <th>Reset token expires</th>
+              <td>{user.resetTokenExpires}</td>
+            </tr>
+            <tr>
+              <th>Reset token expires at</th>
+              <td>{timeTag(user.resetTokenExpiresAt)}</td>
+            </tr>
+            <tr>
+              <th>Roles</th>
+              <td>{user.roles}</td>
             </tr>
           </tbody>
         </table>

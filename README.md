@@ -8,23 +8,26 @@ Follow along on my video journal
 
 ### In Progress
 
+
+- [ ] Convert DB from sqlite to postgres
+- [ ] Deploy
 - [x] Add UI to allow folks to invite members to family and to requst to join a family (medium)
   - [x] Moved "invite" to it's own page
   - [x] Added console log to show reset link when user resets password
-  - [ ] today when you invite someone, it makes an account with a bad password, then they need to reset it. I should email the reset "invite" link to them, and/or show a dialog with instructions to share to have them sign up with the email given
+  - [ ] ONHOLD TILL DEPLOYED: today when you invite someone, it makes an account with a bad password, then they need to reset it. I should email the reset "invite" link to them, and/or show a dialog with instructions to share to have them sign up with the email given
     - [x] I created a "Join Family" page that works the same as "reset" password, this will be part of the message shown/emailed
 
-- [ ] MVP: Build a UI to show how to add this page as a "app" on your phone, and computer (will take time, but this is just a pretty page) (large)
-  - [ ] Page: /install/{thing}
-    - [ ] Browser App on iPhone
-    - [ ] Browser App on Windows
 ~~- [ ] MVP: Build a endpoint that will serve a webdav dataI can connect to with my phone and get events with get parameters to control whole family, and then one for each family member (https://tsdav.vercel.app/)~~ Not happening
 - [ ] MVP: Build a ics output for the calendars see (https://github.com/kewisch/ical.js/wiki/Creating-basic-iCalendar)
 - [ ] MVP: Build a UI to walk through connecting an iPhone to the calendars
   - [ ] Page: /connect/{mailApp}
     - [ ] fastmail
     - [ ] ios mail
-- [ ] Wire up emails for invites, and password resets
+- [ ] ONHOLD TILL EMAIL: Wire up emails for invites, and password resets
+- [ ] MVP: Build a UI to show how to add this page as a "app" on your phone, and computer (will take time, but this is just a pretty page) (large)
+  - [ ] Page: /install/{thing}
+    - [ ] Browser App on iPhone
+    - [ ] Browser App on Windows
 
 ### Done
 - [x] Add table scheme for the family unit (small)

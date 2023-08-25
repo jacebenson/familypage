@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
 import AddEvent from '../AddEvent/AddEvent';
 import { useAuth } from 'src/auth'
+import { Box, Link } from '@chakra-ui/react';
 const localizer = momentLocalizer(moment)
 
 let openModal = (event) => {
@@ -75,6 +76,8 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ calendar, familyId }) => {
+  const { currentUser } = useAuth()
+  let isAdmin = currentUser?.roles?.includes('admin')
   let [events, setEvents] = useState([])
   let [newEvent, setNewEvent] = useState(null)
   useEffect(() => {
@@ -124,12 +127,15 @@ export const Success = ({ calendar, familyId }) => {
 
   }), [events, newEvent, calendar]
 
-  return <div>
+  return <Box>
+    {/** if the user is admin show this */}
+    {isAdmin && (
     <details>
       <pre style={{ whiteSpace: "pre", display: "block" }}>
         {JSON.stringify(calendar, null, ' ')}
       </pre>
     </details>
+    )}
     <AddEvent
       newEvent={newEvent}
       setNewEvent={setNewEvent}
@@ -137,6 +143,8 @@ export const Success = ({ calendar, familyId }) => {
       familyId={familyId}
     />
     Events Total: {events.length}
+    {/**Lets make a link to /.redwood/functions/ics?familyId= */}
+    <Link href={`/.redwood/functions/ics?familyId=${familyId}`}>Download ICS</Link>
     <Calendar
       localizer={localizer}
       events={events}
@@ -151,5 +159,5 @@ export const Success = ({ calendar, familyId }) => {
         openModal(event)
       }}
     />
-  </div>
+  </Box>
 }

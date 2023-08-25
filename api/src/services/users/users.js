@@ -32,20 +32,22 @@ export const createUser = async ({ input }) => {
 }
 
 export const updateUser = async ({ id, input }) => {
-  // if there is only one user, make sure they are an admin
-  let users = await db.user.findMany()
-  if(users.length === 1) {
-    input.roles = "admin"
-  } else {
-    input.roles = "user"
-  }
-  //if there is an admin, set the current user to a user
+  // if there's an admin, don't let anyone else be an admin
+  // also don't let the user remove their own admin role
   let admins = await db.user.findMany({
     where: { roles: "admin" }
   })
-  if(admins.length > 0) {
+  if(admins.length > 0 && input.roles === "admin") {
     input.roles = "user"
   }
+  let thisUser = await db.user.findUnique({
+    where: { id },
+  })
+  if(thisUser.roles === "admin" && input.roles !== "admin") {
+    input.roles = "admin"
+  }
+
+
   let user = db.user.update({
     data: input,
     where: { id },

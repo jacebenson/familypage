@@ -7,7 +7,10 @@ import { toast } from '@redwoodjs/web/toast'
 import { CREATE_EVENT_MUTATION } from 'src/components/Event/NewEvent/NewEvent'
 import { titleCase } from 'src/lib/titleCase'
 import { Box, Button, Flex, Input } from '@chakra-ui/react'
+import { useAuth } from 'src/auth'
 const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
+  const { currentUser } = useAuth()
+  let isAdmin = currentUser?.roles?.includes('admin')
   // the idea here is to have a single text input
   // that parses the date/time and event name
   // and then adds it to the calendar
@@ -20,6 +23,7 @@ const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
   let [eventLocation, setEventLocation] = useState('')
   let [suggestedEventName, setSuggestedEventName] = useState('')
   let [eventICSObject, setEventICSObject] = useState({})
+  let suggestedEventAndDate = `${suggestedEventName} ${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString()}`
   useEffect(() => {
     parseEventString(eventString)
   }, [eventString])
@@ -124,7 +128,7 @@ const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
   }
 
   return (
-    <div>
+    <Box>
       <Flex gap={5}>
       <Input variant='outline' placeholder="Breakfast at Tiffany's Friday at 2pm"  onKeyUp={setEvent} />
       <Button colorScheme='blue'
@@ -140,10 +144,13 @@ const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
       </Button>
       </Flex>
 
-      <div>{suggestedEventName} {eventDate.toLocaleDateString()} {eventDate.toLocaleTimeString()}</div>
+
+      {!isAdmin && eventString && (
+        <div>{suggestedEventAndDate}</div>
+      )}
+      {isAdmin && eventString && (
       <details>
-      <summary>{suggestedEventName}</summary>
-      {eventString && (
+      <summary>{suggestedEventAndDate}</summary>
         <div>
           <p>Event String: {eventString}</p>
           <p>Start Date(iso): {eventDate.toISOString()}</p>
@@ -154,9 +161,9 @@ const AddEvent = ({newEvent, setNewEvent, query, familyId}) => {
           <p>Suggested Event Name: {suggestedEventName}</p>
           <pre style={{textAlign: 'left'}}>{JSON.stringify(eventICSObject, null, 2)}</pre>
         </div>
-      )}
       </details>
-    </div>
+      )}
+    </Box>
   )
 }
 

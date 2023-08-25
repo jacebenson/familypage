@@ -27,9 +27,10 @@ export const handler = async (event, _context) => {
   // object will be like { userCuid: '1234', everyone: true, justMe: false, exclude: ['cuid1', 'cuid2'] }
 
   // from that we'll query events;
-
+  //http://localhost:8910/.redwood/functions/ics?familyId=cllonqqmk0007gu4c6ojkhif7
+  var familyId = event.queryStringParameters.familyId
   var parsedObject = {
-    familyCuid: 'cllolmfxk0001gu8sto0fii0e',
+    familyCuid: familyId,
     include: ['cuid1', 'cuid2']
   }
   let events = await db.event.findMany({
@@ -45,18 +46,18 @@ export const handler = async (event, _context) => {
   vCalendar.updatePropertyWithValue('prodid', '-//iCal.js Wiki Example');
   // Set the iCalendar version
   vCalendar.addPropertyWithValue('version', '2.0');
-  for(var i = 0; i < 3; i++) {
-    var vevent = new ICAL.Component(`vevent`);
-    vevent.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
-    vevent.addPropertyWithValue('x-my-custom-property', 'custom');
-    let iCalEvent = new ICAL.Event(vevent);
-    // Set standard properties
-    iCalEvent.summary = `Test Event ${i} Manually Created`;
-    iCalEvent.uid = `abc${i}`;
-    iCalEvent.startDate = ICAL.Time.now();
-    // Add the new component
-    vCalendar.addSubcomponent(vevent);
-  }
+  //for(var i = 0; i < 3; i++) {
+  //  var vevent = new ICAL.Component(`vevent`);
+  //  vevent.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
+  //  vevent.addPropertyWithValue('x-my-custom-property', 'custom');
+  //  let iCalEvent = new ICAL.Event(vevent);
+  //  // Set standard properties
+  //  iCalEvent.summary = `Test Event ${i} Manually Created`;
+  //  iCalEvent.uid = `abc${i}`;
+  //  iCalEvent.startDate = ICAL.Time.now();
+  //  // Add the new component
+  //  vCalendar.addSubcomponent(vevent);
+  //}
   // add a new component for each event
   events.forEach((event) => {
     let parsedStartDate = JSON.parse(event.start)
@@ -115,11 +116,17 @@ export const handler = async (event, _context) => {
       vCalendar: JSON.stringify(vCalendar.jCal, null, 2),
     })
   })
+// return the payload so it saves with the file calendar.ics
+// to do that we need to
+// return {
+  // whats the property name for setting the file name?
 
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'calendar/text',
+      // file name is calenar.ics
+      'Content-Disposition': 'attachment; filename="calendar.ics"',
     },
     body: vCalendar.toString(),
   }

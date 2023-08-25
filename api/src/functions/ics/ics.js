@@ -124,7 +124,7 @@ export const handler = async (event, _context) => {
   return {
     statusCode: 200,
     headers: {
-      'Content-Type': 'calendar/text',
+      'Content-Type': 'text/calendar',
       // file name is calenar.ics
       'Content-Disposition': 'attachment; filename="calendar.ics"',
     },

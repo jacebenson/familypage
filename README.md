@@ -9,8 +9,9 @@ Follow along on my video journal
 ### In Progress
 
 
-- [ ] Convert DB from sqlite to postgres
-- [ ] Deploy
+- [ ] Improve AddEvent for advanced date/time
+- [ ] Improve Calendar Modal to allow edits and deletes
+- [ ] BUG: When signing up, its possible to not set a family putting the app in a bad state
 - [x] Add UI to allow folks to invite members to family and to requst to join a family (medium)
   - [x] Moved "invite" to it's own page
   - [x] Added console log to show reset link when user resets password
@@ -47,3 +48,5 @@ Follow along on my video journal
 - [x] Bug: On the home page, add a link to "Join a family" under the hosted version
 - [x] Bug: When you signup, if you select create a family, you land on the backend page for families, you should land on the calendar page
 - [x] Bug: The "families" and "events" are not hidden from everyone.
+- [x] Convert DB from sqlite to postgres
+- [x] Deploy

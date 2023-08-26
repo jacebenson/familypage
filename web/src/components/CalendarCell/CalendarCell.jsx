@@ -5,7 +5,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
 import AddEvent from '../AddEvent/AddEvent';
 import { useAuth } from 'src/auth'
-import { Box, Link } from '@chakra-ui/react';
+import { Box, Link, Text, Button } from '@chakra-ui/react';
+import { navigate } from '@redwoodjs/router';
 const localizer = momentLocalizer(moment)
 
 let openModal = (event) => {
@@ -126,7 +127,6 @@ export const Success = ({ calendar, familyId }) => {
     //setNewEvent(null)
 
   }), [events, newEvent, calendar]
-
   return <Box>
     {/** if the user is admin show this */}
     {isAdmin && (
@@ -142,9 +142,18 @@ export const Success = ({ calendar, familyId }) => {
       query={QUERY}
       familyId={familyId}
     />
-    Events Total: {events.length}
-    {/**Lets make a link to /.redwood/functions/ics?familyId= */}
-    <Link href={`/.redwood/functions/ics?familyId=${familyId}`}>Download ICS</Link>
+    <Text>Events Total: {events.length}</Text>
+    <Box>
+    {/**This will have a link to either subscribe */}
+    <Button
+      as={"a"}
+      colorScheme='blue'
+      bg={"blue.500"}
+      //{`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
+      href={`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
+      >Subscribe</Button>
+
+    </Box>
     <Calendar
       localizer={localizer}
       events={events}

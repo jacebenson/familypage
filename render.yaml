@@ -30,7 +30,7 @@ services:
 
 - name: familypage-api
   type: web
-  plan: free
+  plan: starter
   env: node
   region: oregon
   buildCommand: yarn && yarn rw build api

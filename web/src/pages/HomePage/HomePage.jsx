@@ -1,7 +1,5 @@
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-import AddEvent from 'src/components/AddEvent/AddEvent'
-import IcsFetch from 'src/components/IcsFetch/IcsFetch'
 import {
   Box,
   Heading,
@@ -88,30 +86,6 @@ const HomePage = () => {
         </Stack>
 
       </Container>
-      {/*Flex to allow 2 cards centered using chakra ui* */}
-      {/*<ul>
-        <li>
-          <p>🚧Update addEvent to create events</p>
-        </li>
-        <li>
-          <p>✅Update calendar to show events from table</p>
-        </li>
-        <li>
-          <p>⛔add auth</p>
-        </li>
-        <li>
-          <p>⛔add auth user data to addevent</p>
-        </li>
-        <li>
-          <p>⛔render ics file from function endpoint</p>
-        </li>
-        <li>
-          <p>⛔test ics file content</p>
-        </li>
-        <li>
-          <p>⛔update calendar to be filterable by event tags, organizer</p>
-        </li>
-      </ul>*/}
     </>
   )
 }

@@ -91,9 +91,13 @@ return (
             <MenuItem onClick={()=>{navigate(routes.inviteToFamily())}}>Invite Others</MenuItem>
             {currentUser?.roles?.includes('admin') && (
               <>
-              <MenuDivider />
-              <MenuItem onClick={()=>{navigate(routes.users())}}>Users</MenuItem>
+            <MenuDivider />
+              {/**add a "header not clickable" item called admin */}
+              <MenuItem isDisabled>Admin</MenuItem>
+              <MenuItem onClick={()=>{navigate(routes.events())}}>Events</MenuItem>
               <MenuItem onClick={()=>{navigate(routes.families())}}>Families</MenuItem>
+              <MenuItem onClick={()=>{navigate(routes.familyMembers())}}>Family Members</MenuItem>
+              <MenuItem onClick={()=>{navigate(routes.users())}}>Users</MenuItem>
               </>
             )}
               <MenuDivider />

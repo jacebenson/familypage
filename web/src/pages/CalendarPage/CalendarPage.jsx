@@ -53,6 +53,14 @@ const CalendarPage = (props) => {
   /// get ht euser
   const { currentUser } = useAuth()
   let familyId = props.familyId || currentUser?.FamilyMember[0]?.Family?.id
+  if (!familyId) {
+    return (
+      <>
+        <MetaTags title="Calendar" description="Calendar page" />
+        <SetFamily />
+      </>
+    )
+  }
   return (
     <>
       <MetaTags title="Calendar" description="Calendar page" />

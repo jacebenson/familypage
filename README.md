@@ -1,14 +1,76 @@
-# README
+<p align="center">
+  <img src="https://familypage.jace.pro/logo.png" width="200" alt="FamilyPage Logo" />
+</p>
+# FamilyPage
 
-## TODO
+FamilyPage is a collaborative calendar application built on the Redwood framework, leveraging Chakra UI for its user interface and authentication handled by dbauth. This project aims to simplify coordination among family members by providing a straightforward calendar where everyone can easily collaborate and stay updated on important events.
 
-Follow along on my video journal
+## Table of Contents
+
+[Introduction](#introduction)
+[Features](#features)
+[Getting Started](#getting-started)
+[Roadmap](#roadmap)
+[Contributing](#contributing)
+
+## Introduction
+
+Do you struggle with remembering important family events or coordinating plans with your loved ones? FamilyPage is here to streamline your family's schedule management. This application allows family members to maintain a shared calendar, making it effortless to stay informed about various events and commitments.
+
+## Features
+
+- Collaborative Calendar: Family members can collectively manage their events and commitments on a shared calendar.
+- Invitations and Requests: Easily invite family members to join your family unit or request to join theirs.
+- User-Friendly UI: The Chakra UI integration ensures a pleasant and intuitive user experience.
+- Authentication and Security: Authentication is handled by dbAuth, ensuring secure access to family-related information.
+- Responsive Design: FamilyPage is designed to work smoothly across various devices, including smartphones and computers.
+
+## Getting Started
+
+Follow these steps to set up and run FamilyPage on your local machine:
+
+1. Clone the Repository: Clone the FamilyPage repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/familypage.git
+cd familypage
+```
+
+2. Install Dependencies: Install the project's dependencies using Yarn:
+
+```bash
+yarn install
+```
+
+3. Environment Variables: The only environment variable needed is generated running this command.
+
+```bash
+yarn rw g secret
+```
+
+4. Database Setup: FamilyPage uses an SQLite database by default. If you wish to use a different database, update ./api/db/schema.prisma accordingly. To set up the database, run the following command:
+
+5. Run Migrations: Apply the database schema using Prisma migrations:
+
+```bash
+yarn rw prisma migrate dev
+```
+
+6. Start the Development Server: Launch the development server using the following command:
+
+```bash
+yarn rw dev
+```
+
+7. Access the App: Visit http://localhost:8910 in your browser to access FamilyPage.
+
+## Roadmap
+
+Follow along as I build here
 
 [![imgur](https://i.imgur.com/E3Kkia3.png)](https://www.youtube.com/playlist?list=PLiMstOldZgCcnR2m4QLB743eLdeIap70o)
 
 ### In Progress
-
-
 - [ ] Improve AddEvent for advanced date/time
 - [ ] Improve Calendar Modal to allow edits and deletes
 - [ ] BUG: When signing up, its possible to not set a family putting the app in a bad state
@@ -50,3 +112,6 @@ Follow along on my video journal
 - [x] Bug: The "families" and "events" are not hidden from everyone.
 - [x] Convert DB from sqlite to postgres
 - [x] Deploy
+
+## Contributing
+Contributions to FamilyPage are welcome! Feel free to submit issues and pull requests on the GitHub repository.

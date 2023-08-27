@@ -95,6 +95,13 @@ export const updateFamilyMember = ({ id, input }) => {
 }
 
 export const deleteFamilyMember = ({ id }) => {
+  // if there is only one familyMember, then don't delete it
+  let familyMembers = db.familyMember.findMany()
+  if(familyMembers.length == 1) return null
+  // if there is only one admin, then don't delete it
+  let familyMember = db.familyMember.findUnique({ where: { id } })
+  if(familyMember.admin) return null
+
   return db.familyMember.delete({
     where: { id },
   })

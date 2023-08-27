@@ -25,7 +25,7 @@ import {
   Select,
 } from '@chakra-ui/react'
 import { useAuth } from 'src/auth'
-const AddEvent = ({ newEvent, setNewEvent, query, familyId }) => {
+const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
   const { currentUser } = useAuth()
   let isAdmin = currentUser?.roles?.includes('admin')
   // the idea here is to have a single text input
@@ -52,6 +52,17 @@ const AddEvent = ({ newEvent, setNewEvent, query, familyId }) => {
   let [suggestedEventName, setSuggestedEventName] = useState('')
   let [eventICSObject, setEventICSObject] = useState({})
   let suggestedEventAndDate = `${suggestedEventName} ${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString()}`
+  let localAttendees = familyMembers.map((familyMember) => {
+    // check whose attending
+    if(whoseAttending.includes(familyMember.User.id)) {
+      return {
+        id: familyMember.User.id,
+        name: familyMember.User.name || familyMember.User.email,
+        email: familyMember.User.email,
+      }
+    }
+  })
+  console.log({whoseAttending, localAttendees, familyMembers})
   const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     if (eventString) setEventICSObject(parseEventString(eventString))
@@ -121,7 +132,18 @@ const AddEvent = ({ newEvent, setNewEvent, query, familyId }) => {
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
       organizer: { name: 'Family Calendar', email: '' },
-      attendees: [],
+      // lets add the attendees email addresses and names
+      // how they do it on email 'name' <email>
+      attendees: (()=>{
+        let attendees = []
+        localAttendees.forEach((attendee) => {
+          if(!attendee) return
+          console.log({attendee})
+          // if name is blank, then just use the email
+          attendees.push(`${attendee.name} <${attendee.email}>`)
+        })
+        return attendees
+      })(),
       familyId
     }
     return setUpEventICSObject
@@ -281,6 +303,7 @@ const AddEvent = ({ newEvent, setNewEvent, query, familyId }) => {
         <details>
           <summary>{suggestedEventAndDate}</summary>
           <div>
+            <p>Whose Attending: {JSON.stringify(localAttendees)}</p>
             <p>Event String: {eventString}</p>
             <p>Start Date(iso): {eventDate.toISOString()}</p>
             <p>Start Date(local): {eventDate.toLocaleDateString() + ' ' + eventDate.toLocaleTimeString()}</p>

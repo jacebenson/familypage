@@ -5,8 +5,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
 import AddEvent from '../AddEvent/AddEvent';
 import { useAuth } from 'src/auth'
-import { Box, Link, Text, Button } from '@chakra-ui/react';
+import { Box, Link, Text, Button, Checkbox, FormControl, Stack, Code } from '@chakra-ui/react';
 import { navigate } from '@redwoodjs/router';
+import { set } from '@redwoodjs/forms';
 const localizer = momentLocalizer(moment)
 
 let openModal = (event) => {
@@ -46,7 +47,7 @@ let openModal = (event) => {
 
 export const QUERY = gql`
   query FindCalendarQuery($familyId: String!) {
-    calendar: eventsByFamily(familyId: $familyId) {
+    dbEvents: eventsByFamily(familyId: $familyId) {
       id
       title
       description
@@ -59,6 +60,14 @@ export const QUERY = gql`
       start
       duration
       geo
+    }
+    familyMembers: familyMembersByFamily(familyId: $familyId) {
+      id
+      User {
+        id
+        name
+        email
+      }
     }
   }
 `
@@ -76,22 +85,21 @@ export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({ calendar, familyId }) => {
+export const Success = ({ dbEvents, familyId, familyMembers }) => {
   const { currentUser } = useAuth()
   let isAdmin = currentUser?.roles?.includes('admin')
   let [events, setEvents] = useState([])
   let [newEvent, setNewEvent] = useState(null)
+  let [eventMembers] = useState([currentUser.id])
+  let [checkedEventMembers, setCheckedEventMembers] = useState([currentUser.id])
   useEffect(() => {
-    console.log({
-      events,
-      calendar
-    })
+
     // lets convert the calendar to a list of events
     // we may have already done this
     // so lets check if events is empty
     if (events.length == 0) {
       // we have not converted the calendar to a list of events
-      let localEvents = calendar.map((event) => {
+      let localEvents = dbEvents.map((event) => {
         let start = JSON.parse(event.start)
         let [year, month, day, hour, minute] = start
         let startObj = new Date(year, month, day, hour, minute)
@@ -126,31 +134,75 @@ export const Success = ({ calendar, familyId }) => {
     //setEvents(events)
     //setNewEvent(null)
 
-  }), [events, newEvent, calendar]
+  }), [events, newEvent, dbEvents]
+
   return <Box>
     {/** if the user is admin show this */}
     {isAdmin && (
-    <details>
-      <pre style={{ whiteSpace: "pre", display: "block" }}>
-        {JSON.stringify(calendar, null, ' ')}
-      </pre>
-    </details>
+      <details>
+        <pre style={{ whiteSpace: "pre", display: "block" }}>
+          {JSON.stringify(dbEvents, null, ' ')}
+        </pre>
+      </details>
     )}
     <AddEvent
-      newEvent={newEvent}
       setNewEvent={setNewEvent}
-      query={QUERY}
       familyId={familyId}
+      whoseAttending={checkedEventMembers}
+      familyMembers={familyMembers}
     />
+    {/**a nice looking minumal border checkbox section with a label of "Whose going" */}
+    <Box border='1px solid lightgrey' rounded={5} mt={2} p={1}>
+    <Stack spacing={5} direction='row'>
+      <Text>Whose going</Text>
+      {familyMembers.map((familyMember) => {
+        let name = familyMember.User.name || familyMember.User.email.split('@')[0]
+        // lets properly case the name
+        name = name.split(' ').map((word) => {
+          return word[0].toUpperCase() + word.slice(1)
+        }).join(' ')
+
+        let isChecked = checkedEventMembers.includes(familyMember.User.id)
+        return (<Checkbox
+          key={`check-${familyMember.id}`}
+          isChecked={isChecked}
+          onChange={(e) => {
+            // when it's changed,
+            // if it's was checked, then remove it from the list
+            // if it was not checked, then add it to the list
+            if (isChecked) {
+              // remove it from the list
+              let newCheckedEventMembers = checkedEventMembers.filter((checkedEventMember) => {
+                return checkedEventMember != familyMember.User.id
+              })
+              setCheckedEventMembers(newCheckedEventMembers)
+            }
+            if (!isChecked) {
+              // add it to the list
+              let newCheckedEventMembers = [...checkedEventMembers, familyMember.User.id]
+              setCheckedEventMembers(newCheckedEventMembers)
+            }
+          }}
+          >
+            {name}
+          </Checkbox>
+        )
+      })}
+    </Stack>
+    </Box>
+
     <Text>Events Total: {events.length}</Text>
+    <Text>Family Members Total: {familyMembers.length}</Text>
+    <Text>eventMembers: {JSON.stringify(eventMembers, null, 2)}</Text>
+    <Text>checkedEventMembers: {JSON.stringify(checkedEventMembers, null, 2)}</Text>
     <Box>
-    {/**This will have a link to either subscribe */}
-    <Button
-      as={"a"}
-      colorScheme='blue'
-      bg={"blue.500"}
-      //{`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
-      href={`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
+      {/**This will have a link to either subscribe */}
+      <Button
+        as={"a"}
+        colorScheme='blue'
+        bg={"blue.500"}
+        //{`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
+        href={`webcal://${document.location.host}/.redwood/functions/ics?familyId=${familyId}`}
       >Subscribe</Button>
 
     </Box>

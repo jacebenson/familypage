@@ -17,6 +17,7 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
+      <Route path="/edit-event" page={EditEventPage} name="editEvent" />
       <Route path="/" page={HomePage} name="home" />
       <Set wrap={HomeLayout}>
         <Route notfound page={NotFoundPage} />
@@ -39,12 +40,6 @@ const Routes = () => {
             <Route path="/admin/events/{id}/edit" page={EventEditEventPage} name="editEvent" />
             <Route path="/admin/events/{id}" page={EventEventPage} name="event" />
             <Route path="/admin/events" page={EventEventsPage} name="events" />
-          </Set>
-          <Set wrap={ScaffoldLayout} title="UserEvents" titleTo="userEvents" buttonLabel="New UserEvent" buttonTo="newUserEvent">
-            <Route path="/admin/user-events/new" page={UserEventNewUserEventPage} name="newUserEvent" />
-            <Route path="/admin/user-events/{id}/edit" page={UserEventEditUserEventPage} name="editUserEvent" />
-            <Route path="/admin/user-events/{id}" page={UserEventUserEventPage} name="userEvent" />
-            <Route path="/admin/user-events" page={UserEventUserEventsPage} name="userEvents" />
           </Set>
           <Set wrap={ScaffoldLayout} title="Users" titleTo="users" buttonLabel="New User" buttonTo="newUser">
             <Route path="/admin/users/new" page={UserNewUserPage} name="newUser" />

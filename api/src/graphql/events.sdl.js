@@ -37,6 +37,21 @@ export const schema = gql`
     geo: String
     familyId: String
   }
+  input CreateEventWithAttendeesInput {
+    title: String!
+    description: String
+    location: String
+    url: String
+    status: String!
+    busyStatus: String!
+    organizer: String!
+    attendees: [String]
+    start: String!
+    duration: String!
+    geo: String
+    familyId: String
+  }
+
 
   input UpdateEventInput {
     title: String
@@ -55,6 +70,7 @@ export const schema = gql`
 
   type Mutation {
     createEvent(input: CreateEventInput!): Event! @requireAuth
+    createEventWithAttendees(input: CreateEventWithAttendeesInput!): Event! @requireAuth
     updateEvent(id: String!, input: UpdateEventInput!): Event! @requireAuth
     deleteEvent(id: String!): Event! @requireAuth
   }

@@ -25,7 +25,28 @@ import {
   Select,
 } from '@chakra-ui/react'
 import { useAuth } from 'src/auth'
-const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
+
+const CREATE_EVENT_WITH_ATTENDEES_MUTATION = gql`
+  mutation CreateEventWithAttendeesMutation($input: CreateEventWithAttendeesInput!) {
+    createEventWithAttendees(input: $input) {
+      id
+      title
+      description
+      location
+      url
+      status
+      busyStatus
+      organizer
+      attendees
+      start
+      duration
+      familyId
+    }
+  }
+`
+
+
+const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, familyMembers, emailsAttending }) => {
   const { currentUser } = useAuth()
   let isAdmin = currentUser?.roles?.includes('admin')
   // the idea here is to have a single text input
@@ -62,7 +83,6 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
       }
     }
   })
-  console.log({whoseAttending, localAttendees, familyMembers})
   const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     if (eventString) setEventICSObject(parseEventString(eventString))
@@ -80,10 +100,6 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
     return now.toISOString().slice(0, 16)
   }
   const handleFormChange = (e) => {
-    console.log({
-      name: e.target.name,
-      value: e.target.value,
-    })
     setAdvancedEvent({
       ...advancedEvent,
       [e.target.name]: e.target.value
@@ -106,10 +122,6 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
       // while were here; lets set the duration
       if (chronoObj.end && chronoObj.start) {
         let duration = chronoObj.end.date() - chronoObj.start.date()
-        console.log({
-          start: chronoObj.start.date(),
-          end: chronoObj.end.date(),
-        })
         setEventDuration(duration)
         setEventDate(chronoObj.start.date())
         // if there is an end date, lets set it
@@ -131,17 +143,24 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
       location: lastLocation,
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
-      organizer: { name: 'Family Calendar', email: '' },
+      // organizer should follow this format
+      // attendees.push(`${attendee.name} <${attendee.email}>`)
+      organizer: (()=>{
+        if(currentUser.name) return `${currentUser.name} <${currentUser.email}>`
+        return currentUser.email
+      })(),
       // lets add the attendees email addresses and names
       // how they do it on email 'name' <email>
       attendees: (()=>{
         let attendees = []
         localAttendees.forEach((attendee) => {
           if(!attendee) return
-          console.log({attendee})
           // if name is blank, then just use the email
           attendees.push(`${attendee.name} <${attendee.email}>`)
         })
+        // add in emailattendees
+        attendees = attendees.join(',')
+        if(emailsAttending) attendees += `,${emailsAttending}`
         return attendees
       })(),
       familyId
@@ -186,22 +205,17 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
       let duration = JSON.parse(eventICSObject.duration)
       if (duration?.hours) endDate.setHours(endDate.getHours() + duration.hours)
       if (duration?.minutes) endDate.setMinutes(endDate.getMinutes() + duration.minutes)
-      console.log({
-        startDate: startDate.toISOString(),
-        endDate,
-        duration,
-      })
       let newEvent = {
         start: startDate,//.toISOString(),
         end: endDate,//.toISOString(),
         title: eventICSObject.title,
         allDay: false,
+        id: result.createEvent.id,
       }
       setNewEvent(newEvent)
-    },
+      setEvents([...events, newEvent])
 
-    //refetchQueries: [{query: query}],
-    //refetch query and set the events to it
+    },
   })
   const onSubmit = (data) => {
     setAdvancedSubmit(false)
@@ -210,8 +224,7 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
     data.start = JSON.stringify(data.start)
     data.duration = JSON.stringify(data.duration)
     data.attendees = JSON.stringify(data.attendees)
-    data.organizer = JSON.stringify(data.organizer)
-    console.log({ data })
+    data.organizer = data.organizer
     createEvent({ variables: { input: data } })
   }
 
@@ -284,8 +297,6 @@ const AddEvent = ({ setNewEvent, familyId, whoseAttending, familyMembers }) => {
                 setAdvancedSubmit(false)
                 onClose()
               }}
-              // disable until we have a title and start date
-              // advancedEvent isn't set until
               >
                 Save Event
               </Button>

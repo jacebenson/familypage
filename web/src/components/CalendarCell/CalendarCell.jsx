@@ -5,9 +5,31 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
 import AddEvent from '../AddEvent/AddEvent';
 import { useAuth } from 'src/auth'
-import { Box, Link, Text, Button, Checkbox, FormControl, Stack, Code } from '@chakra-ui/react';
+import {
+  Box,
+  Link,
+  Text,
+  Button,
+  Checkbox,
+  FormControl,
+  Stack,
+  Code,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+useDisclosure,
+FormLabel,
+Input,
+Flex
+
+} from '@chakra-ui/react';
 import { navigate } from '@redwoodjs/router';
-import { set } from '@redwoodjs/forms';
+import { Form, set } from '@redwoodjs/forms';
+import EditEventCell from 'src/components/EditEventCell';
 const localizer = momentLocalizer(moment)
 
 let openModal = (event) => {
@@ -44,6 +66,7 @@ let openModal = (event) => {
   }
   )
 }
+
 
 export const QUERY = gql`
   query FindCalendarQuery($familyId: String!) {
@@ -86,38 +109,48 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ dbEvents, familyId, familyMembers }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useAuth()
   let isAdmin = currentUser?.roles?.includes('admin')
   let [events, setEvents] = useState([])
   let [newEvent, setNewEvent] = useState(null)
   let [eventMembers] = useState([currentUser.id])
   let [checkedEventMembers, setCheckedEventMembers] = useState([currentUser.id])
+  let [selectedEvent, setSelectedEvent] = useState(null)
+  let [emailsAttending, setEmailsAttending] = useState(null)
   useEffect(() => {
 
-    // lets convert the calendar to a list of events
-    // we may have already done this
-    // so lets check if events is empty
+    // if we have no events in the list of events, lets convert the events from the database to events for the calendar
     if (events.length == 0) {
       // we have not converted the calendar to a list of events
       let localEvents = dbEvents.map((event) => {
+
+        // start
         let start = JSON.parse(event.start)
         let [year, month, day, hour, minute] = start
         let startObj = new Date(year, month, day, hour, minute)
+
+        // end
         let duration = JSON.parse(event.duration)
         let endObj = new Date(startObj)
         if (duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
         endObj.setMinutes(startObj.getMinutes() + duration.minutes)
+
+        // eventObj
         let eventObj = {
           title: event.title,
           start: startObj,
           end: endObj,
           allDay: false,
-          //id: event.id
+          id: event.id
         }
         return eventObj
       })
+
+      // update the list of events
       setEvents(localEvents)
     }
+
     // if newEvent is not null, then we need to add it to the list of events
     // we'll need to first ensure its not already in the list
     if (events.length > 0 && newEvent) {
@@ -130,9 +163,6 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
         setEvents([...events, newEvent])
       }
     }
-
-    //setEvents(events)
-    //setNewEvent(null)
 
   }), [events, newEvent, dbEvents]
 
@@ -149,52 +179,84 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
       setNewEvent={setNewEvent}
       familyId={familyId}
       whoseAttending={checkedEventMembers}
+      emailsAttending={emailsAttending}
       familyMembers={familyMembers}
+      setEvents={setEvents}
+      events={events}
     />
     {/**a nice looking minumal border checkbox section with a label of "Whose going" */}
     <Box border='1px solid lightgrey' rounded={5} mt={2} p={1}>
-    <Stack spacing={5} direction='row'>
-      <Text>Whose going</Text>
-      {familyMembers.map((familyMember) => {
-        let name = familyMember.User.name || familyMember.User.email.split('@')[0]
-        // lets properly case the name
-        name = name.split(' ').map((word) => {
-          return word[0].toUpperCase() + word.slice(1)
-        }).join(' ')
+      <Stack spacing={5} direction='row'>
+        <Text>Whose going</Text>
+        {familyMembers.map((familyMember) => {
+          let name = familyMember.User.name || familyMember.User.email.split('@')[0]
+          // lets properly case the name
+          name = name.split(' ').map((word) => {
+            return word[0].toUpperCase() + word.slice(1)
+          }).join(' ')
 
-        let isChecked = checkedEventMembers.includes(familyMember.User.id)
-        return (<Checkbox
-          key={`check-${familyMember.id}`}
-          isChecked={isChecked}
-          onChange={(e) => {
-            // when it's changed,
-            // if it's was checked, then remove it from the list
-            // if it was not checked, then add it to the list
-            if (isChecked) {
-              // remove it from the list
-              let newCheckedEventMembers = checkedEventMembers.filter((checkedEventMember) => {
-                return checkedEventMember != familyMember.User.id
+          let isChecked = checkedEventMembers.includes(familyMember.User.id)
+          return (
+            <Checkbox
+              key={`check-${familyMember.id}`}
+              isChecked={isChecked}
+              onChange={(e) => {
+                // when it's changed,
+                // if it's was checked, then remove it from the list
+                // if it was not checked, then add it to the list
+                if (isChecked) {
+                  // remove it from the list
+                  let newCheckedEventMembers = checkedEventMembers.filter((checkedEventMember) => {
+                    return checkedEventMember != familyMember.User.id
+                  })
+                  setCheckedEventMembers(newCheckedEventMembers)
+                }
+                if (!isChecked) {
+                  // add it to the list
+                  let newCheckedEventMembers = [...checkedEventMembers, familyMember.User.id]
+                  setCheckedEventMembers(newCheckedEventMembers)
+                }
+              }}
+            >
+              {name}
+            </Checkbox>
+          )
+        })}
+
+        <FormControl>
+          <FormLabel display={'none'}>Emails</FormLabel>
+          <Input placeholder="Emails comma seperated"
+            onChange={(e) => {
+              // lets do a little validation
+              // we need to make sure the emails are valid
+              // 1. split the emails by comma
+              // 2. trim the emails
+              // 3. make sure emails contain something@something
+              let emails = e.target.value.split(',')
+              let validEmails = emails.map((email) => {
+                return email.trim()
+              }).filter((email) => {
+                return email.includes('@')
+              }).filter((email) => {
+                return email.includes('.')
               })
-              setCheckedEventMembers(newCheckedEventMembers)
-            }
-            if (!isChecked) {
-              // add it to the list
-              let newCheckedEventMembers = [...checkedEventMembers, familyMember.User.id]
-              setCheckedEventMembers(newCheckedEventMembers)
-            }
-          }}
-          >
-            {name}
-          </Checkbox>
-        )
-      })}
-    </Stack>
+
+              if(validEmails.length == 0) validEmails = null
+
+              setEmailsAttending(validEmails)
+            }}
+
+          />
+        </FormControl>
+
+      </Stack>
     </Box>
 
     <Text>Events Total: {events.length}</Text>
     <Text>Family Members Total: {familyMembers.length}</Text>
     <Text>eventMembers: {JSON.stringify(eventMembers, null, 2)}</Text>
     <Text>checkedEventMembers: {JSON.stringify(checkedEventMembers, null, 2)}</Text>
+    <Text>emailsAttending: {JSON.stringify(emailsAttending)}</Text>
     <Box>
       {/**This will have a link to either subscribe */}
       <Button
@@ -215,10 +277,23 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
 
       style={{ height: 'calc(100vh - 250px)' }}
       onSelectEvent={(event) => {
-        console.log(event)
-        // lets open a modal here
-        openModal(event)
+        setSelectedEvent(event)
+        // chakra-ui modal to be opneed
+        onOpen()
       }}
     />
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{selectedEvent?.title}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {selectedEvent?.id &&
+            <EditEventCell id={selectedEvent?.id} familyMembers={familyMembers} />
+          }
+
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   </Box>
 }

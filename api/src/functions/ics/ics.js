@@ -81,9 +81,12 @@ export const handler = async (event, _context) => {
     // Set the DTSTAMP property to the current date and time
     vevent2.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
     vevent2.addPropertyWithValue('comment', new ICAL.Time().fromJSDate(new Date()));
-    vevent2.addPropertyWithValue('attendee', 'attendee');
-    vevent2.addPropertyWithValue('attendee', 'attendee2');
-    vevent2.addPropertyWithValue('url', 'url');
+    let attendees = JSON.parse(event.attendees)
+    attendees = attendees.split(',')
+    attendees.forEach((attendee) => {
+      vevent2.addPropertyWithValue('attendee', attendee);
+    })
+    if(event.url) vevent2.addPropertyWithValue('url', event.url);
     //vevent2.startDate = new ICAL.Time().fromJSDate(new Date(startDate.getTime()));
     let iCalEvent2 = new ICAL.Event(vevent2);
     // Set standard properties
@@ -91,11 +94,11 @@ export const handler = async (event, _context) => {
     iCalEvent2.uid = event.id;
     iCalEvent2.startDate = new ICAL.Time().fromJSDate(new Date(startDate.getTime()));
     iCalEvent2.endDate = new ICAL.Time().fromJSDate(new Date(endDate.getTime()));
-    iCalEvent2.description = event.description;
-    iCalEvent2.location = 'location';
-    iCalEvent2.url = 'url';
+    if(event.description) iCalEvent2.description = event.description;
+    if(event.location) iCalEvent2.location = 'location';
+    if(event.url) iCalEvent2.url = 'url';
     // TODO: set up recurrence rules
-    iCalEvent2.organizer = 'organizer';
+    iCalEvent2.organizer = event.organizer
     /** optional properties, may occur 1 time
      * class / created / description* / geo /
        last-mod / location / organizer / priority /

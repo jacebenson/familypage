@@ -20,13 +20,12 @@ model User {
   resetToken          String?
   resetTokenExpires   String?
   resetTokenExpiresAt DateTime?
-  UserEvent           UserEvent[]
   FamilyMember        FamilyMember[]
   roles               String?        @default("user")
 }
 
 model Event {
-  id          String      @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
   description String?
   location    String?
@@ -38,17 +37,8 @@ model Event {
   start       String
   duration    String
   geo         String?
-  UserEvent   UserEvent[]
-  Family      Family?     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  Family      Family? @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId    String?
-}
-
-model UserEvent {
-  id      String @id @default(cuid())
-  userId  String
-  eventId String
-  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Family {

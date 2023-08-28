@@ -63,9 +63,6 @@ export const deleteUser = ({ id }) => {
 }
 
 export const User = {
-  UserEvent: (_obj, { root }) => {
-    return db.user.findUnique({ where: { id: root?.id } }).UserEvent()
-  },
   FamilyMember: (_obj, { root }) => {
     return db.user.findUnique({ where: { id: root?.id } }).FamilyMember()
   },

@@ -24,6 +24,25 @@ export const createEvent = ({ input }) => {
     data: input,
   })
 }
+export const createEventWithAttendees = async ({ input }) => {
+  let { attendees, ...event } = input
+  let newEvent = await db.event.create({
+    data: event,
+  })
+  if (attendees) {
+    let userEvents = attendees.map((userId) => {
+      return {
+        userId,
+        eventId: newEvent.id,
+      }
+    })
+    await db.userEvent.createMany({
+      data: userEvents,
+    })
+  }
+  return newEvent
+}
+
 
 export const updateEvent = ({ id, input }) => {
   return db.event.update({

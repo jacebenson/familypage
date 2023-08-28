@@ -60,10 +60,15 @@ export const handler = async (event, _context) => {
     vevent2.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
     vevent2.addPropertyWithValue('comment', new ICAL.Time().fromJSDate(new Date()));
     let attendees = JSON.parse(event.attendees)
-    attendees = attendees.split(',')
-    attendees.forEach((attendee) => {
-      vevent2.addPropertyWithValue('attendee', attendee);
-    })
+    if(attendees.includes(',')) {
+      attendees = attendees.split(',')
+      attendees.forEach((attendee) => {
+        vevent2.addPropertyWithValue('attendee', attendee);
+      })
+    }
+    if(attendees.indexOf(',') === -1) {
+      vevent2.addPropertyWithValue('attendee', attendees);
+    }
     if(event.url) vevent2.addPropertyWithValue('url', event.url);
     //vevent2.startDate = new ICAL.Time().fromJSDate(new Date(startDate.getTime()));
     let iCalEvent2 = new ICAL.Event(vevent2);

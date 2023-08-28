@@ -122,6 +122,10 @@ export const Success = ({ event, familyMembers }) => {
   })()
 
   const formatAttendees = (attendees, familyMembers) => {
+    console.log({
+      attendees,
+      familyMembers
+    })
     let parsedAttendees = attendees.split(',')
     let output = []
     parsedAttendees.forEach((attendee) => {

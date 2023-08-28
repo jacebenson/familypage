@@ -18,6 +18,7 @@ const ICAL = require('ical.js');
  * function, and execution environment.
  */
 export const handler = async (event, _context) => {
+  try{
   logger.info(`${event.httpMethod} ${event.path}: ics function`)
 
   // we need to handle auth somehow to work with .. outlook does this with a custom url parameter... i guess i'll do the same...
@@ -29,54 +30,31 @@ export const handler = async (event, _context) => {
   // from that we'll query events;
   //http://localhost:8910/.redwood/functions/ics?familyId=cllonqqmk0007gu4c6ojkhif7
   var familyId = event.queryStringParameters.familyId
-  var parsedObject = {
-    familyCuid: familyId,
-    include: ['cuid1', 'cuid2']
+  if(!familyId) {
+    return {
+      statusCode: 400,
+      body: "familyId is required"
+    }
   }
   let events = await db.event.findMany({
     where: {
       familyId: {
-        equals: parsedObject.familyCuid
+        equals: familyId
       },
     }
   })
-  console.log('parsedObject', parsedObject)
-  console.log('events', events)
   var vCalendar = new ICAL.Component(['vcalendar', [], []]);
   vCalendar.updatePropertyWithValue('prodid', '-//iCal.js Wiki Example');
   // Set the iCalendar version
   vCalendar.addPropertyWithValue('version', '2.0');
-  //for(var i = 0; i < 3; i++) {
-  //  var vevent = new ICAL.Component(`vevent`);
-  //  vevent.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
-  //  vevent.addPropertyWithValue('x-my-custom-property', 'custom');
-  //  let iCalEvent = new ICAL.Event(vevent);
-  //  // Set standard properties
-  //  iCalEvent.summary = `Test Event ${i} Manually Created`;
-  //  iCalEvent.uid = `abc${i}`;
-  //  iCalEvent.startDate = ICAL.Time.now();
-  //  // Add the new component
-  //  vCalendar.addSubcomponent(vevent);
-  //}
-  // add a new component for each event
   events.forEach((event) => {
     let parsedStartDate = JSON.parse(event.start)
     let parsedDuration = JSON.parse(event.duration)
     let durationHours = parsedDuration?.hours
     let durationMinutes = parsedDuration?.minutes
-    console.log({
-      startDate: event.start,
-      duration: event.duration,
-      parsedStartDate,
-      parsedDuration
-    })
     let [startYear, startMonth, startDay, startHour, startMinute] = parsedStartDate
     let startDate = new Date(startYear, startMonth, startDay, startHour, startMinute)
     let endDate = new Date(startDate.getTime() + (durationHours ? durationHours : 0) * 60 * 60 * 1000 + durationMinutes * 60 * 1000)
-    console.log({
-      startDate,
-      endDate
-    })
     var vevent2 = new ICAL.Component(`vevent`);
     // Set the DTSTAMP property to the current date and time
     vevent2.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
@@ -114,10 +92,6 @@ export const handler = async (event, _context) => {
      */
     // Add the new component
     vCalendar.addSubcomponent(vevent2);
-    console.log({
-      message: `adding ${event.title} to calendar`,
-      vCalendar: JSON.stringify(vCalendar.jCal, null, 2),
-    })
   })
 // return the payload so it saves with the file calendar.ics
 // to do that we need to
@@ -132,5 +106,12 @@ export const handler = async (event, _context) => {
       'Content-Disposition': 'attachment; filename="calendar.ics"',
     },
     body: vCalendar.toString(),
+  }
+  } catch(e) {
+    logger.error(e)
+    return {
+      statusCode: 500,
+      body: e.message
+    }
   }
 }

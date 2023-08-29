@@ -83,6 +83,7 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
       }
     }
   })
+  console.log({localAttendees})
   const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     if (eventString) setEventICSObject(parseEventString(eventString))
@@ -156,15 +157,15 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
         localAttendees.forEach((attendee) => {
           if(!attendee) return
           // if name is blank, then just use the email
-          attendees.push(`${attendee.name} <${attendee.email}>`)
+          attendees.push(attendee.email)
         })
         // add in emailattendees
         attendees = attendees.join(',')
-        if(emailsAttending) attendees += `,${emailsAttending}`
         return attendees
       })(),
       familyId
     }
+    console.log('setUpEventICSObject', setUpEventICSObject)
     return setUpEventICSObject
   }
   const parseAdvancedEvent = (advancedEvent) => {
@@ -225,6 +226,7 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
     data.duration = JSON.stringify(data.duration)
     data.attendees = JSON.stringify(data.attendees)
     data.organizer = data.organizer
+    console.log('data', data)
     createEvent({ variables: { input: data } })
   }
 

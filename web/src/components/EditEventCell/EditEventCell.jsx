@@ -41,6 +41,13 @@ export const QUERY = gql`
       geo
       familyId
     }
+    familyMembers: familyMembersByFamily(familyId: $id) {
+      id
+      User {
+        name
+        email
+      }
+    }
   }
 `
 
@@ -129,7 +136,7 @@ export const Success = ({ event, familyMembers }) => {
     let parsedAttendees = attendees.split(',')
     let output = []
     parsedAttendees.forEach((attendee) => {
-      let attendeeEmail = attendee.split('<')[1].split('>')[0]
+      let attendeeEmail = attendee
       let familyMember = getUserFromEmail(attendeeEmail, familyMembers)
       if (familyMember) {
         if(familyMember.name) familyMember.name = titleCase(familyMember.name)

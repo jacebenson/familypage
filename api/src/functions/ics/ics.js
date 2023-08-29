@@ -45,10 +45,11 @@ export const handler = async (event, _context) => {
     }
   })
   var vCalendar = new ICAL.Component(['vcalendar', [], []]);
-  vCalendar.updatePropertyWithValue('prodid', '-//iCal.js Wiki Example');
+  vCalendar.updatePropertyWithValue('prodid', 'FamilyPage');
   // Set the iCalendar version
   vCalendar.addPropertyWithValue('version', '2.0');
   events.forEach((event) => {
+    console.log({event})
     let parsedStartDate = JSON.parse(event.start)
     let parsedDuration = JSON.parse(event.duration)
     let durationHours = parsedDuration?.hours
@@ -60,6 +61,7 @@ export const handler = async (event, _context) => {
     // Set the DTSTAMP property to the current date and time
     vevent2.addPropertyWithValue('dtstamp', new ICAL.Time().fromJSDate(new Date()));
     vevent2.addPropertyWithValue('comment', new ICAL.Time().fromJSDate(new Date()));
+    console.log({attendees: event.attendees})
     let attendees = JSON.parse(event.attendees)
     if(attendees.includes(',')) {
       attendees = attendees.split(',')

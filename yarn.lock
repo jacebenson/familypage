@@ -19940,6 +19940,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"rrule@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "rrule@npm:2.7.2"
+  dependencies:
+    tslib: ^2.4.0
+  checksum: efd8c5866a5bd59c2ebcaf89553333e8ac566816621ba70554745b7afd2265b8fbd5432c29529845ebf72ec936d6c25aa596bf90776b6fa08c778efddf0ade78
+  languageName: node
+  linkType: hard
+
 "run-async@npm:^2.4.0":
   version: 2.4.1
   resolution: "run-async@npm:2.4.1"
@@ -22584,6 +22593,7 @@ __metadata:
     react-big-calendar: ^1.8.2
     react-dom: 18.2.0
     react-icons: ^4.10.1
+    rrule: ^2.7.2
   languageName: unknown
   linkType: soft
 

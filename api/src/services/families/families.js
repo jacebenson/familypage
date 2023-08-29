@@ -1,5 +1,5 @@
 import { db } from 'src/lib/db'
-import { user } from '../users/users'
+
 
 export const families = () => {
   return db.family.findMany()
@@ -15,7 +15,6 @@ export const createFamily = async ({ input }) => {
   // consider the logged in person
   // if they are not in a family, then they are the admin
   let currentUser = context.currentUser
-  console.log({ currentUser })
   // we can tell if they don'thave a family by their # of memberships
   let userNeedsFamily = currentUser.FamilyMember.length === 0
   if(userNeedsFamily){

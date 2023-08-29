@@ -1,5 +1,6 @@
 import { db } from 'src/lib/db';
 import { logger } from 'src/lib/logger'
+import CryptoJS from 'crypto-js'
 const ICAL = require('ical.js');
 /**
  * The handler function is your code that processes http request events.
@@ -70,6 +71,7 @@ export const handler = async (event, _context) => {
       vevent2.addPropertyWithValue('attendee', attendees);
     }
     if(event.url) vevent2.addPropertyWithValue('url', event.url);
+    if(event.repeats) vevent2.addPropertyWithValue('rrule', event.repeats);
     //vevent2.startDate = new ICAL.Time().fromJSDate(new Date(startDate.getTime()));
     let iCalEvent2 = new ICAL.Event(vevent2);
     // Set standard properties

@@ -3,6 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect } from 'react';
+import { datetime, RRule, RRuleSet, rrulestr } from 'rrule'
 import AddEvent from '../AddEvent/AddEvent';
 import { useAuth } from 'src/auth'
 import {
@@ -24,7 +25,8 @@ import {
 useDisclosure,
 FormLabel,
 Input,
-Flex
+Flex,
+Select
 
 } from '@chakra-ui/react';
 import { navigate } from '@redwoodjs/router';
@@ -115,9 +117,11 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
   let [events, setEvents] = useState([])
   let [newEvent, setNewEvent] = useState(null)
   let [eventMembers] = useState([currentUser.id])
+  let [repeatingSettings, setRepeating] = useState(null)
   let [checkedEventMembers, setCheckedEventMembers] = useState([currentUser.id])
   let [selectedEvent, setSelectedEvent] = useState(null)
   let [emailsAttending, setEmailsAttending] = useState(null)
+  let [rrule, setRRule] = useState(null)
   useEffect(() => {
 
     // if we have no events in the list of events, lets convert the events from the database to events for the calendar
@@ -150,7 +154,6 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
       // update the list of events
       setEvents(localEvents)
     }
-
     // if newEvent is not null, then we need to add it to the list of events
     // we'll need to first ensure its not already in the list
     if (events.length > 0 && newEvent) {
@@ -166,6 +169,61 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
 
   }), [events, newEvent, dbEvents]
 
+
+
+  let handleRepeatingChange = (e) => {
+    // this can take an update from a number of fields;
+    // we'll be putting these all in the repeatingSettings object
+    let value = e.target.value
+    let name = e.target.name
+    let newRepeatingSettings = { ...repeatingSettings }
+    newRepeatingSettings[name] = value
+    setRepeating(newRepeatingSettings)
+
+   // lets build the proper rrule string
+   // example rule
+   /**
+    * // Create a rule:
+const rule = new RRule({
+  freq: RRule.WEEKLY,
+  interval: 5,
+  byweekday: [RRule.MO, RRule.FR],
+  dtstart: datetime(2012, 2, 1, 10, 30),
+  until: datetime(2012, 12, 31)
+})
+    */
+   //then just toString it
+   //TODO FIGURE THIS OUT
+   let rrule = null
+   let rruleObj = {}
+    if(repeatingSettings?.type == 'none') {
+      rrule = null
+    }
+    if(repeatingSettings?.type == 'every') {
+      if(repeatingSettings?.freq){
+        rruleObj.freq = RRule[repeatingSettings?.freq?.toUpperCase()]
+      }
+      rruleObj.interval = repeatingSettings?.interval ? repeatingSettings?.interval : 1
+      rruleObj.dtstart = datetime(2021, 1, 1, 10, 30)
+      if(repeatingSettings?.duration == 'until') {
+        // datetime takes year, month, day, hour, minute
+        let until = new Date(repeatingSettings?.until)
+        let year = until.getFullYear()
+        let month = until.getMonth()
+        let day = until.getDate()
+        rruleObj.until = datetime(year, month, day)
+      }
+      if(repeatingSettings?.duration == 'count') {
+        rruleObj.count = repeatingSettings?.number
+      }
+      if(repeatingSettings?.duration == 'forever') {
+        // do nothing
+      }
+      console.log({rruleObj})
+      rrule = new RRule(rruleObj).toString()
+    }
+    setRRule(rrule)
+  }
   return <Box>
     {/** if the user is admin show this */}
     {isAdmin && (
@@ -251,7 +309,43 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
 
       </Stack>
     </Box>
+<Box border='1px solid lightgrey' rounded={5} mt={2} p={1}>
+    <Stack spacing={5} direction='row'>
+        <Text>Repeat</Text>
+        <Select name="type" onChange={handleRepeatingChange}>
+          <option >None</option>
+          <option value="every">Every</option>
+          <option value="everyother">Every other</option>
+          <option value="interval">Every (number)</option>
+        </Select>
+        {repeatingSettings?.type == 'interval' && (
+          <Input name="interval" onChange={handleRepeatingChange} />
+        )}
 
+        <Select name="freq" onChange={handleRepeatingChange}>
+          <option >None</option>
+          <option value="daily">day</option>
+          <option value="weekly">week</option>
+          <option value="monthly">month</option>
+          <option value="yearly">year</option>
+        </Select>
+        <Select name="duration" onChange={handleRepeatingChange}>
+          <option >None</option>
+          <option value="forever">Forever</option>
+          <option value="until">Until</option>
+          <option value="count">Number</option>
+        </Select>
+        {repeatingSettings?.duration == 'until' && (
+          <Input name="until" type="date"
+            // when picking onchange doesnt always fire
+          onChange={handleRepeatingChange} />
+        )}
+        {repeatingSettings?.duration == 'count' && (
+          <Input name="number" onChange={handleRepeatingChange} />
+        )}
+      </Stack>
+      <Text>{rrule}</Text>
+</Box>
     <Text>Events Total: {events.length}</Text>
     <Text>Family Members Total: {familyMembers.length}</Text>
     <Text>eventMembers: {JSON.stringify(eventMembers, null, 2)}</Text>

@@ -71,7 +71,11 @@ Follow along as I build here
 [![imgur](https://i.imgur.com/E3Kkia3.png)](https://www.youtube.com/playlist?list=PLiMstOldZgCcnR2m4QLB743eLdeIap70o)
 
 ### In Progress
+
+- [ ] When displaying an event from the calendar, the attendees are not listed correctly (Looks fixed, test after deploy)
+
 - [ ] Improve AddEvent for advanced date/time
+  - [ ] Added recurring options
   - [x] Added a person picker
   - [ ] REuse edit modal for add event
 - [ ] Improve Calendar Modal to allow edits and deletes
@@ -116,9 +120,9 @@ Follow along as I build here
 - [x] Bug: The "families" and "events" are not hidden from everyone.
 - [x] Convert DB from sqlite to postgres
 - [x] Deploy
-
-
 - [x] BUG: When signing up, its possible to not set a family putting the app in a bad state
+
+- [x] Add security around ics endpoint where no familyId is given
 
 ## Contributing
 Contributions to FamilyPage are welcome! Feel free to submit issues and pull requests on the GitHub repository.

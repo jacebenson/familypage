@@ -29,6 +29,7 @@ const Card = ({
   if (!features) { features = ['feature 1', 'feature 2', 'feature 3'] }
   if (!CTAText) { CTAText = 'Learn more' }
   if (!CTALink) { CTALink = 'https://ddg.gg' }
+  if (!CTATarget) { CTATarget = '_self' }
   return (
     <Center py={2}>
       <Box

@@ -83,6 +83,7 @@ const Card = ({
           <Button
             as={'a'}
             href={CTALink}
+            target={CTATarget || '_self'}
             mt={10}
             w={'full'}
             bg={'green.400'}

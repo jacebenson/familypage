@@ -60,6 +60,7 @@ const HomePage = () => {
               ]}
               CTALink={"https://github.com/jacebenson/familyPage"}
               CTAText={"Learn More"}
+              CTATarget={"_blank"}
             />
             <Spacer />
             <Card

@@ -75,7 +75,8 @@ Follow along as I build here
 - [ ] When displaying an event from the calendar, the attendees are not listed correctly (Looks fixed, test after deploy)
 
 - [ ] Improve AddEvent for advanced date/time
-  - [ ] Added recurring options
+  - [ ] ~~Added recurring options~~
+  - [ ] Convert all pages to chakra-ui
   - [x] Added a person picker
   - [ ] REuse edit modal for add event
 - [ ] Improve Calendar Modal to allow edits and deletes

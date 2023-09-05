@@ -21,3 +21,4 @@ prod.db*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+api/src/db/sqlite.db

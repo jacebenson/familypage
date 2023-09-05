@@ -122,38 +122,67 @@ export const Success = ({ dbEvents, familyId, familyMembers }) => {
   let [selectedEvent, setSelectedEvent] = useState(null)
   let [emailsAttending, setEmailsAttending] = useState(null)
   let [rrule, setRRule] = useState(null)
+  if (events.length == 0) {
+    // we have not converted the calendar to a list of events
+    let localEvents = dbEvents.map((event) => {
+
+      // start
+      let start = JSON.parse(event.start)
+      let [year, month, day, hour, minute] = start
+      let startObj = new Date(year, month, day, hour, minute)
+
+      // end
+      let duration = JSON.parse(event.duration)
+      let endObj = new Date(startObj)
+      if (duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
+      endObj.setMinutes(startObj.getMinutes() + duration.minutes)
+
+      // eventObj
+      let eventObj = {
+        title: event.title,
+        start: startObj,
+        end: endObj,
+        allDay: false,
+        id: event.id
+      }
+      return eventObj
+    })
+
+    // update the list of events
+    setEvents(localEvents)
+  }
   useEffect(() => {
 
     // if we have no events in the list of events, lets convert the events from the database to events for the calendar
-    if (events.length == 0) {
-      // we have not converted the calendar to a list of events
-      let localEvents = dbEvents.map((event) => {
-
-        // start
-        let start = JSON.parse(event.start)
-        let [year, month, day, hour, minute] = start
-        let startObj = new Date(year, month, day, hour, minute)
-
-        // end
-        let duration = JSON.parse(event.duration)
-        let endObj = new Date(startObj)
-        if (duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
-        endObj.setMinutes(startObj.getMinutes() + duration.minutes)
-
-        // eventObj
-        let eventObj = {
-          title: event.title,
-          start: startObj,
-          end: endObj,
-          allDay: false,
-          id: event.id
-        }
-        return eventObj
-      })
-
-      // update the list of events
-      setEvents(localEvents)
-    }
+   // if (events.length == 0) {
+   //   // we have not converted the calendar to a list of events
+   //   let localEvents = dbEvents.map((event) => {
+//
+   //     // start
+   //     let start = JSON.parse(event.start)
+   //     let [year, month, day, hour, minute] = start
+   //     let startObj = new Date(year, month, day, hour, minute)
+//
+   //     // end
+   //     let duration = JSON.parse(event.duration)
+   //     let endObj = new Date(startObj)
+   //     if (duration.hours) endObj.setHours(startObj.getHours() + duration.hours)
+   //     endObj.setMinutes(startObj.getMinutes() + duration.minutes)
+//
+   //     // eventObj
+   //     let eventObj = {
+   //       title: event.title,
+   //       start: startObj,
+   //       end: endObj,
+   //       allDay: false,
+   //       id: event.id
+   //     }
+   //     return eventObj
+   //   })
+//
+   //   // update the list of events
+   //   setEvents(localEvents)
+   // }
     // if newEvent is not null, then we need to add it to the list of events
     // we'll need to first ensure its not already in the list
     if (events.length > 0 && newEvent) {
@@ -309,7 +338,7 @@ const rule = new RRule({
 
       </Stack>
     </Box>
-<Box border='1px solid lightgrey' rounded={5} mt={2} p={1}>
+{/*<Box border='1px solid lightgrey' rounded={5} mt={2} p={1}>
     <Stack spacing={5} direction='row'>
         <Text>Repeat</Text>
         <Select name="type" onChange={handleRepeatingChange}>
@@ -345,7 +374,7 @@ const rule = new RRule({
         )}
       </Stack>
       <Text>{rrule}</Text>
-</Box>
+</Box>*/}
     <Text>Events Total: {events.length}</Text>
     <Text>Family Members Total: {familyMembers.length}</Text>
     <Text>eventMembers: {JSON.stringify(eventMembers, null, 2)}</Text>

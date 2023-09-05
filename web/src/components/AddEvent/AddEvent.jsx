@@ -83,7 +83,7 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
       }
     }
   })
-  console.log({localAttendees})
+  //console.log({localAttendees})
   const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     if (eventString) setEventICSObject(parseEventString(eventString))

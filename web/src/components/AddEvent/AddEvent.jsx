@@ -22,7 +22,12 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  Select,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Spacer,
 } from '@chakra-ui/react'
 import { useAuth } from 'src/auth'
 
@@ -70,12 +75,13 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
   let [eventDate, setEventDate] = useState(new Date())
   let [eventDuration, setEventDuration] = useState(25 * 60 * 1000)//25 minutes
   let [eventLocation, setEventLocation] = useState('')
+  let [daysHoursMinutes, setDaysHoursMinutes] = useState([0, 0, 25, "25 minutes"])
   let [suggestedEventName, setSuggestedEventName] = useState('')
   let [eventICSObject, setEventICSObject] = useState({})
   let suggestedEventAndDate = `${suggestedEventName} ${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString()}`
   let localAttendees = familyMembers.map((familyMember) => {
     // check whose attending
-    if(whoseAttending.includes(familyMember.User.id)) {
+    if (whoseAttending.includes(familyMember.User.id)) {
       return {
         id: familyMember.User.id,
         name: familyMember.User.name || familyMember.User.email,
@@ -85,6 +91,20 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
   })
   //console.log({localAttendees})
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isOpenDebug, onOpen: onOpenDebug, onClose: onCloseDebug } = useDisclosure()
+  // observe keyboard input of ctrl+shift+g to open debug modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'g') {
+        onOpenDebug()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   useEffect(() => {
     if (eventString) setEventICSObject(parseEventString(eventString))
     // if advanced event has values, lets parse it
@@ -140,22 +160,22 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
       // duration expects an object of {hours: 1, minutes: 30}
       duration: { minutes: eventDuration / 1000 / 60 },
       title: eventString,
-      description: eventString,
+      description: "",
       location: lastLocation,
       status: 'CONFIRMED',
       busyStatus: 'BUSY',
       // organizer should follow this format
       // attendees.push(`${attendee.name} <${attendee.email}>`)
-      organizer: (()=>{
-        if(currentUser.name) return `${currentUser.name} <${currentUser.email}>`
+      organizer: (() => {
+        if (currentUser.name) return `${currentUser.name} <${currentUser.email}>`
         return currentUser.email
       })(),
       // lets add the attendees email addresses and names
       // how they do it on email 'name' <email>
-      attendees: (()=>{
+      attendees: (() => {
         let attendees = []
         localAttendees.forEach((attendee) => {
-          if(!attendee) return
+          if (!attendee) return
           // if name is blank, then just use the email
           attendees.push(attendee.email)
         })
@@ -179,7 +199,7 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
     // we need to parse the start date from datetime-local
     // a value is like "2023-08-26T23:52"
     let startDate = new Date(advancedEvent.start + ':00Z')
-    let eventDuration = advancedEvent?.duration*60*1000 || 25 * 60 * 1000
+    let eventDuration = advancedEvent?.duration * 60 * 1000 || 25 * 60 * 1000
 
     // we should be able to map mostly
     let setUpEventICSObject = {
@@ -229,18 +249,65 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
     console.log('data', data)
     createEvent({ variables: { input: data } })
   }
+  let [duration, setDuration] = useState(25)
 
   return (
     <Box>
-      <Flex gap={5}>
-        <Input variant='outline' placeholder="Breakfast at Tiffany's Friday at 2pm" onKeyUp={setEvent} />
-        <Button colorScheme='blue'
-          isDisabled={!suggestedEventName}
-          onClick={() => { onSubmit(eventICSObject)}}
-        >
-          Add Event
-        </Button>
-        <Button onClick={onOpen}>Open Modal</Button>
+      {/**make this responseive */}
+      <Flex gap={2} direction={['column', 'row']} alignItems='center' justifyContent='space-between'>
+        <FormControl>
+          <FormLabel>Event</FormLabel>
+          <Input variant='outline' placeholder="Breakfast at Tiffany's Friday at 2pm" onKeyUp={setEvent} />
+        </FormControl>
+        <FormControl w={200}>
+          <FormLabel>Minutes</FormLabel>
+          <NumberInput
+            step={5}
+            placeholder='Duration(minutes)'
+            min={5}
+            onChange={(value) => {
+              setEventDuration(value * 60 * 1000)
+              setDuration(value)
+              setEventICSObject({
+                ...eventICSObject,
+                duration: { minutes: parseInt(value, 10) }
+              })
+              setDaysHoursMinutes([
+                Math.floor(value / 60 / 24),
+                Math.floor(value / 60 % 24),
+                Math.floor(value % 60),
+                // nice days/hours/minutes string
+                (() => {
+                  let days = Math.floor(value / 60 / 24)
+                  let hours = Math.floor(value / 60 % 24)
+                  let minutes = Math.floor(value % 60)
+                  let daysStr = days > 0 ? `${days} days` : ''
+                  let hoursStr = hours > 0 ? `${hours} hours` : ''
+                  let minutesStr = minutes > 0 ? `${minutes} minutes` : ''
+                  return `${daysStr} ${hoursStr} ${minutesStr}`
+                })()
+              ])
+            }}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+        <FormControl w={'200'}>
+          <FormLabel>&nbsp;</FormLabel>
+          <Button colorScheme='blue'
+            isDisabled={!suggestedEventName}
+            onClick={() => { onSubmit(eventICSObject) }}
+            // hight = as big as the input
+            h={10}
+          >
+            Add Event
+          </Button>
+        </FormControl>
+        {/*<Button onClick={onOpen}>Open Modal</Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -305,28 +372,33 @@ const AddEvent = ({ events, setEvents, setNewEvent, familyId, whoseAttending, fa
             </ModalFooter>
           </ModalContent>
         </Modal>
-
+*/}
       </Flex>
-
-
-      {!isAdmin && eventString && (
-        <div>{suggestedEventAndDate}</div>
-      )}
+      <div>{suggestedEventAndDate} for {daysHoursMinutes[3]}</div>
       {isAdmin && eventString && (
-        <details>
-          <summary>{suggestedEventAndDate}</summary>
-          <div>
-            <p>Whose Attending: {JSON.stringify(localAttendees)}</p>
-            <p>Event String: {eventString}</p>
-            <p>Start Date(iso): {eventDate.toISOString()}</p>
-            <p>Start Date(local): {eventDate.toLocaleDateString() + ' ' + eventDate.toLocaleTimeString()}</p>
-            <p>Duration(ms): {eventDuration}</p>
-            <p>Duration(minutes): {eventDuration / 1000 / 60}</p>
-            <p>Location: {eventLocation}</p>
-            <p>Suggested Event Name: {suggestedEventName}</p>
-            <pre style={{ textAlign: 'left' }}>{JSON.stringify(eventICSObject, null, 2)}</pre>
-          </div>
-        </details>
+        <Modal isOpen={isOpenDebug} onClose={onCloseDebug} >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Debug</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>Whose Attending: {JSON.stringify(localAttendees)}</Text>
+              <Text>Event String: {eventString}</Text>
+              <Text>Start Date(iso): {eventDate.toISOString()}</Text>
+              <Text>Start Date(local): {eventDate.toLocaleDateString() + ' ' + eventDate.toLocaleTimeString()}</Text>
+              <Text>Duration(ms): {eventDuration}</Text>
+              <Text>Duration(minutes): {eventDuration / 1000 / 60}</Text>
+              <Text>Location: {eventLocation}</Text>
+              <Text>Suggested Event Name: {suggestedEventName}</Text>
+              <pre style={{ textAlign: 'left' }}>{JSON.stringify(eventICSObject, null, 2)}</pre>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       )}
     </Box>
   )

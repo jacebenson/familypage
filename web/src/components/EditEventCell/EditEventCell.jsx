@@ -1,6 +1,8 @@
+import { toast } from '@redwoodjs/web/toast'
+import { useMutation } from "@redwoodjs/web"
 import {
-   Flex,
-   FormControl,
+  Flex,
+  FormControl,
   Badge,
   Box,
   Button,
@@ -15,12 +17,14 @@ import {
   Text,
   Textarea,
   VStack,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react"
 
 import { MdEvent, MdLocationOn, MdAccessTime } from 'react-icons/md'
@@ -50,6 +54,13 @@ export const QUERY = gql`
     }
   }
 `
+const DELETE_EVENT_MUTATION = gql`
+  mutation DeleteEventMutation($id: String!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`
 
 export const beforeQuery = (props) => {
   return {
@@ -66,9 +77,10 @@ export const Failure = ({ error }) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({ event, familyMembers }) => {
+export const Success = ({ event, familyMembers, setEvents, events, onClose }) => {
   let [debug, setDebug] = React.useState(false)
   let [edit, setEdit] = React.useState(false)
+  const { onOpen: onOpenConfirm, isOpen: isOpenConfirm, onClose: onCloseConfirm } = useDisclosure()
   let fields = [
     { name: 'title', type: 'string' },
     { name: 'description', type: 'textarea' },
@@ -82,6 +94,25 @@ export const Success = ({ event, familyMembers }) => {
     { name: 'duration', type: 'string' },
     { name: 'geo', type: 'string' },
   ]
+  const [deleteEvent] = useMutation(DELETE_EVENT_MUTATION, {
+    onCompleted: () => {
+      toast.success('Event deleted')
+      navigate(routes.events())
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const onDeleteClick = (id) => {
+    var newEvents = events.filter((event) => {
+      return event.id !== id
+    })
+    setEvents(newEvents)
+    deleteEvent({ variables: { id } })
+    // close the modal
+    onClose()
+  }
   const formatDuration = (duration) => {
 
     const { hours, minutes } = JSON.parse(duration);
@@ -112,18 +143,18 @@ export const Success = ({ event, familyMembers }) => {
     let familyMember = familyMembers.find((familyMember) => {
       return familyMember.User.email === email
     })
-    if (!familyMember) return { email: email}
+    if (!familyMember) return { email: email }
     return familyMember.User
   }
   const organizer = (() => {
     let organizerEmail = event.organizer
-    if(event.organizer.includes('<')) {
+    if (event.organizer.includes('<')) {
       organizerEmail = event.organizer.split('<')[1].split('>')[0]
     }
     let familyMember = getUserFromEmail(organizerEmail, familyMembers)
     if (familyMember) {
-      if(familyMember.name) familyMember.name = titleCase(familyMember.name)
-      if(!familyMember.name) familyMember.name = familyMember.email
+      if (familyMember.name) familyMember.name = titleCase(familyMember.name)
+      if (!familyMember.name) familyMember.name = familyMember.email
     }
     return familyMember
   })()
@@ -133,19 +164,39 @@ export const Success = ({ event, familyMembers }) => {
       attendees,
       familyMembers
     })
-    let parsedAttendees = attendees.split(',')
+    let parsedAttendees = attendees?.split(',')
     let output = []
-    parsedAttendees.forEach((attendee) => {
+    parsedAttendees?.forEach((attendee) => {
       let attendeeEmail = attendee
       let familyMember = getUserFromEmail(attendeeEmail, familyMembers)
       if (familyMember) {
-        if(familyMember.name) familyMember.name = titleCase(familyMember.name)
+        if (familyMember.name) familyMember.name = titleCase(familyMember.name)
         output.push(familyMember.name || familyMember.email)
       }
     })
     return output.join(', ')
   }
   return (<Box>
+    <Modal isOpen={isOpenConfirm} onClose={onCloseConfirm}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Delete Event</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          Are you sure you want to delete this event?
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={onCloseConfirm}>
+            Cancel
+          </Button>
+          <Button variant="ghost" onClick={() => {
+            onDeleteClick(event.id)
+            onCloseConfirm()
+          }}>Delete</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
     {!edit && <Box
       borderWidth="1px"
       borderRadius="lg"
@@ -223,7 +274,7 @@ export const Success = ({ event, familyMembers }) => {
     </Box>}
     <Flex pt={1} gap={1}>
       <Spacer />
-      {!edit && <Button
+      {!edit && false && <Button
         size={'sm'}
         colorScheme="yellow"
         mb="2"
@@ -247,7 +298,8 @@ export const Success = ({ event, familyMembers }) => {
         colorScheme="red"
         mb="2"
         onClick={() => {
-          setEdit(!edit)
+          onOpenConfirm()
+          //onDeleteClick(event.id)
         }}
       >Delete</Button>
     </Flex>

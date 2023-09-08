@@ -29,45 +29,8 @@ Flex,
 Select
 
 } from '@chakra-ui/react';
-import { navigate } from '@redwoodjs/router';
-import { Form, set } from '@redwoodjs/forms';
 import EditEventCell from 'src/components/EditEventCell';
 const localizer = momentLocalizer(moment)
-
-let openModal = (event) => {
-  // lets create a dialog element in the center of the screen
-  let dialog = document.createElement('dialog')
-  dialog.setAttribute('id', 'dialog')
-  //close other dialogs
-  let dialogs = document.querySelectorAll('dialog')
-  dialogs.forEach((dialog) => {
-    dialog.close()
-  })
-  dialog.setAttribute('open', true)
-  dialog.style.position = 'fixed'
-  dialog.style.top = '50%'
-  dialog.style.left = '50%'
-  dialog.style.transform = 'translate(-50%, -50%)'
-  dialog.style.zIndex = 9999
-  dialog.style.background = 'white'
-  dialog.style.padding = '20px'
-  dialog.style.borderRadius = '10px'
-  dialog.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)'
-  // its not centered yet, because the width is 100%
-  // lets set the width to 50%
-  dialog.style.width = '50%'
-  dialog.innerHTML = `
-    <h1>${event.title}</h1>
-    <p>${event.start?.toLocaleString()}</p>
-    <p>${event.end?.toLocaleString()}</p>
-    <button>Close</button>
-  `
-  document.body.appendChild(dialog)
-  dialog.querySelector('button').addEventListener('click', () => {
-    dialog.close()
-  }
-  )
-}
 
 
 export const QUERY = gql`
@@ -255,13 +218,6 @@ const rule = new RRule({
   }
   return <Box>
     {/** if the user is admin show this */}
-    {isAdmin && (
-      <details>
-        <pre style={{ whiteSpace: "pre", display: "block" }}>
-          {JSON.stringify(dbEvents, null, ' ')}
-        </pre>
-      </details>
-    )}
     <AddEvent
       setNewEvent={setNewEvent}
       familyId={familyId}
@@ -375,12 +331,12 @@ const rule = new RRule({
       </Stack>
       <Text>{rrule}</Text>
 </Box>*/}
-    <Text>Events Total: {events.length}</Text>
+    {/*<Text>Events Total: {events.length}</Text>
     <Text>Family Members Total: {familyMembers.length}</Text>
     <Text>eventMembers: {JSON.stringify(eventMembers, null, 2)}</Text>
     <Text>checkedEventMembers: {JSON.stringify(checkedEventMembers, null, 2)}</Text>
-    <Text>emailsAttending: {JSON.stringify(emailsAttending)}</Text>
-    <Box>
+    <Text>emailsAttending: {JSON.stringify(emailsAttending)}</Text>*/}
+    <Box py={2}>
       {/**This will have a link to either subscribe */}
       <Button
         as={"a"}
@@ -412,7 +368,14 @@ const rule = new RRule({
         <ModalCloseButton />
         <ModalBody>
           {selectedEvent?.id &&
-            <EditEventCell id={selectedEvent?.id} familyMembers={familyMembers} />
+            <EditEventCell
+            id={selectedEvent?.id}
+            familyMembers={familyMembers}
+            setEvents={setEvents}
+            events={events}
+            onClose={onClose}
+
+            />
           }
 
         </ModalBody>

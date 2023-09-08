@@ -19,10 +19,32 @@ export const event = ({ id }) => {
   })
 }
 
-export const createEvent = ({ input }) => {
-  return db.event.create({
+export const createEvent = async ({ input }) => {
+  let event = await db.event.create({
     data: input,
   })
+  // now we have the event, we need to append the description w/ the link
+  // using the event.id
+  console.log({event})
+  let description = input.description
+  let link = `https://familypage.jace.pro/edit-event/${event.id}`
+  if(description) {
+    description = `${description}\n\n${link}`
+  }
+  if(!description) {
+    description = link
+  }
+
+  let updatedEvent = await db.event.update({
+    where: { id: event.id },
+    data: {
+      description
+    },
+  })
+  return {
+    ...event,
+    description
+  }
 }
 export const createEventWithAttendees = async ({ input }) => {
   let { attendees, ...event } = input

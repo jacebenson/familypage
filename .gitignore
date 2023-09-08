@@ -6,6 +6,7 @@
 !.redwood/README.md
 dev.db*
 sqlite.db*
+.sqlite.db*
 dist
 dist-babel
 node_modules
@@ -22,4 +23,4 @@ prod.db*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-api/src/db/sqlite.db
+api/src/db/.sqlite.db

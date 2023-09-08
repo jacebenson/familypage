@@ -107,13 +107,17 @@ export const handler = async (event, _context) => {
 // to do that we need to
 // return {
   // whats the property name for setting the file name?
-
+// we need to open up cors
+// CORS policy: No 'Access-Control-Allow-Origin'
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'text/calendar',
       // file name is calenar.ics
       'Content-Disposition': 'attachment; filename="calendar.ics"',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
     },
     body: vCalendar.toString(),
   }

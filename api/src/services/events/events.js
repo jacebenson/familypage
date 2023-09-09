@@ -13,10 +13,11 @@ export const events = () => {
   return db.event.findMany()
 }
 
-export const event = ({ id }) => {
-  return db.event.findUnique({
+export const event = async ({ id }) => {
+  let returnEvent = await db.event.findUnique({
     where: { id },
   })
+  return returnEvent
 }
 
 export const createEvent = async ({ input }) => {
@@ -66,11 +67,16 @@ export const createEventWithAttendees = async ({ input }) => {
 }
 
 
-export const updateEvent = ({ id, input }) => {
-  return db.event.update({
+export const updateEvent = async ({ id, input }) => {
+  delete input?.id
+  console.log({ id, input })
+
+  let returnEvent = await db.event.update({
     data: input,
     where: { id },
   })
+  console.log({ returnEvent })
+  return returnEvent
 }
 
 export const deleteEvent = ({ id }) => {

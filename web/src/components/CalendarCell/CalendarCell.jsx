@@ -374,7 +374,6 @@ const rule = new RRule({
             setEvents={setEvents}
             events={events}
             onClose={onClose}
-
             />
           }
 

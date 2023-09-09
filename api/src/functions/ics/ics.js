@@ -82,7 +82,19 @@ export const handler = async (event, _context) => {
     iCalEvent2.uid = event.id;
     iCalEvent2.startDate = new ICAL.Time().fromJSDate(new Date(startDate.getTime()));
     iCalEvent2.endDate = new ICAL.Time().fromJSDate(new Date(endDate.getTime()));
-    if(event.description) iCalEvent2.description = event.description;
+    let description = (()=>{
+      // create link to edit event
+      // if prod use https://familypage.jace.pro/event/${event.id}
+      // if dev use http://localhost:8910/event/${event.id}
+      let linkText = `Edit Event: https://familypage.jace.pro/event/${event.id}`
+      if(process.env.ENV === 'development') {
+        linkText = `Edit Event: http://localhost:8910/event/${event.id}`
+      }
+      if(event.description) return event.description + '\n\n' + linkText
+      if(!event.description) return linkText
+
+    })()
+    if(description) iCalEvent2.description = description;
     if(event.location) iCalEvent2.location = 'location';
     if(event.url) iCalEvent2.url = 'url';
     // TODO: set up recurrence rules

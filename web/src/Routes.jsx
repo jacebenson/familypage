@@ -17,10 +17,10 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/edit-event/{id}" page={EditEventPage} name="editEvent" />
       <Route path="/" page={HomePage} name="home" />
       <Set wrap={HomeLayout}>
         <Route notfound page={NotFoundPage} />
+        <Route path="/event/{id}" page={EditEventPublicPage} name="editEventPublic" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />

@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import EditEventPage from './EditEventPage'
+import EditEventPublicPage from './EditEventPublicPage'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //   https://redwoodjs.com/docs/testing#testing-pages-layouts
 
-describe('EditEventPage', () => {
+describe('EditEventPublicPage', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<EditEventPage />)
+      render(<EditEventPublicPage />)
     }).not.toThrow()
   })
 })

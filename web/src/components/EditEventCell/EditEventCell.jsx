@@ -28,6 +28,8 @@ import {
 } from "@chakra-ui/react"
 
 import { MdEvent, MdLocationOn, MdAccessTime } from 'react-icons/md'
+import { parse } from 'chrono-node'
+import { navigate } from '@redwoodjs/router'
 export const QUERY = gql`
   query FindEventByIdCustom($id: String!) {
     event: event(id: $id) {
@@ -112,7 +114,7 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
     { name: 'organizer', type: 'string' },
     { name: 'attendees', type: 'string' },
     { name: 'start', type: 'datetime' },
-    { name: 'duration', type: 'duration' },
+    { name: 'duration', type: 'duration', fieldLabel: 'Duration (minutes)' },
     { name: 'geo', type: 'string' },
   ]
   let handleChange = (e) => {
@@ -190,22 +192,50 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
 
   const formatDuration = (duration) => {
 
-    const { hours, minutes } = JSON.parse(duration);
+    let { hours, minutes } = JSON.parse(duration);
+/** lets return days, hours, minutes if they are greater than 0
+ * <Text>
+                  {Math.round(formatDurationEdit(formState[field.name])/1440) > 0 && (
+                    <>
+                    {Math.round(formatDurationEdit(formState[field.name])/1440)} days&nbsp;
+                    </>
+                  )}
+                  {Math.round(formatDurationEdit(formState[field.name])/60) > 0 && (
+                    <>
+                  {Math.round(formatDurationEdit(formState[field.name])/60)%24} hours&nbsp;
+                    </>
+                  )}
+                  {formatDurationEdit(formState[field.name])%60} minutes
+                </Text>
+ */
+  // first convert hours to minutes
+  if(!hours) hours = 0
+  if(!minutes) minutes = 0
+  hours = parseInt(hours)
+  minutes = parseInt(minutes)
+  let totalMinutes = hours * 60 + minutes
+  let days = Math.round(totalMinutes/1440)
+  let hoursLeft = Math.round(totalMinutes/60)%24
+  let minutesLeft = totalMinutes%60
+  let output = ''
+  if(days > 0) output += `${days} days `
+  if(hoursLeft > 0) output += `${hoursLeft} hours `
+  if(minutesLeft > 0) output += `${minutesLeft} minutes `
+  return output
 
-    if (hours === 0 || hours === undefined) {
-      return `${minutes} minutes`;
-    } else if (minutes === 0) {
-      return `${hours} hours`;
-    } else {
-      return `${hours} hours ${minutes} minutes`;
-    }
+
   };
   const formatDurationEdit = (duration) => {
-    const { hours, minutes } = JSON.parse(duration);
+    let { hours, minutes } = JSON.parse(duration);
     // convert hours to minutes
-    return JSON.stringify({
-      minutes: hours * 60 + minutes
-    })
+    if(!hours) hours = 0
+    if(!minutes) minutes = 0
+    hours = parseInt(hours)
+    minutes = parseInt(minutes)
+
+    //return JSON.stringify({
+    //  minutes: hours * 60 + minutes
+    //})
     let totalMinutes = hours * 60 + minutes
     return totalMinutes
   }
@@ -366,7 +396,7 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
             return titleCaseWords.join(' ')
           })()
           return (<FormControl>
-            <FormLabel htmlFor={field.name}>{fieldName}</FormLabel>
+            <FormLabel htmlFor={field.name}>{field?.fieldLabel || fieldName}</FormLabel>
             {field.type == 'select' && (
               <Select
                 name={field.name}
@@ -388,17 +418,29 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
             )}
             {field.type == 'duration' && (
               <>
-              <Text>Duration Raw: {event[field.name]}</Text>
-              <Text>Duration: {formatDuration(event[field.name])}</Text>
-              <Text>Duration Edit: {formatDurationEdit(event[field.name])}</Text>
               <Input
                 type="number"
                 name={field.name}
                 id={field.name}
-                defaultValue="{formatDurationEdit(event[field.name])}"
+                defaultValue={formatDurationEdit(event[field.name])}
                 onChange={handleChange}
                 />
-              </>
+                {/**show days, hours minutes */}
+                {/*<Text>{Math.round(JSON.parse(formState[field.name]).minutes/60)} hours {JSON.parse(formState[field.name]).minutes%60} minutes</Text>              </>*/}
+                <Text>
+                  {Math.round(formatDurationEdit(formState[field.name])/1440) > 0 && (
+                    <>
+                    {Math.round(formatDurationEdit(formState[field.name])/1440)} days&nbsp;
+                    </>
+                  )}
+                  {Math.round(formatDurationEdit(formState[field.name])/60) > 0 && (
+                    <>
+                  {Math.round(formatDurationEdit(formState[field.name])/60)%24} hours&nbsp;
+                    </>
+                  )}
+                  {formatDurationEdit(formState[field.name])%60} minutes
+                </Text>
+                </>
             )}
             {field.type == 'datetime' && (
               <Input
@@ -419,7 +461,12 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
                     let lines = event[field.name].split('\n')
                     return lines.length
                 })()}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e)
+                  // set the number of rows
+                  let lines = e.target.value.split('\n')
+                  e.target.rows = lines.length
+                }}
                 />
             )}
           </FormControl>)
@@ -444,6 +491,9 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
         onClick={() => {
           //setEdit(!edit)
           onSave(event, event.id)
+          // close the modal
+          if(onClose) onClose()
+          if(redirect) navigate({to: routes.home()})
         }}
       >Save
       </Button>}

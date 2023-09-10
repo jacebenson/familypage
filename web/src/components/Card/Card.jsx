@@ -16,7 +16,9 @@ import { CheckIcon } from '@chakra-ui/icons'
 
 const Card = ({
   title,
+  originalPrice,
   price,
+  priceComment,
   frequency,
   features,
   CTAText,
@@ -32,6 +34,7 @@ const Card = ({
   if (!features) { features = ['feature 1', 'feature 2', 'feature 3'] }
   if (!CTAText) { CTAText = 'Learn more' }
   if (!CTALink) { CTALink = 'https://ddg.gg' }
+  if (!originalPrice) { originalPrice = false }
   return (
     <Center py={2}>
       <Box
@@ -61,12 +64,27 @@ const Card = ({
             {price && frequency && (
               <Box>
                 <Box display={'flex'}>
+                <Box>
+                {/**strike through at a 15 degree angle */}
+                <Text
+                  transform={'rotate(-15deg)'}
+                  textDecoration={'line-through'}
+                  color={'gray.500'}
+                  fontSize={'3xl'}
+                  fontWeight={800}>
+                  {originalPrice}
+                </Text>
+
+              </Box>
                 {price !='Free' && (<Text fontSize={'3xl'}>$</Text>)}
                 <Text fontSize={'6xl'} fontWeight={800}>
                   {price}
                 </Text>
                 </Box>
                 <Text color={'gray.500'}>/{frequency}</Text>
+                {priceComment && (
+                  <Text color={'gray.500'} fontSize={'sm'}>{priceComment}</Text>
+                )}
               </Box>
             )}
 

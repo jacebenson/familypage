@@ -61,7 +61,9 @@ const HomePage = () => {
             <Spacer />
             <Card
               title="Online"
-              price={"4.99"}
+              originalPrice={"0.99"}
+              price={"Free"}
+              priceComment={"for a limited time"}
               frequency={"month"}
               features={[
                 "Add events",

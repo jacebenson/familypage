@@ -32,7 +32,7 @@ const Routes = () => {
           <Route path="/my-profile" page={MyProfilePage} name="myProfile" />
           <Route path="/invite-to-family" page={InviteToFamilyPage} name="inviteToFamily" />
           <Route path="/inviteSomeone/{familyId}" page={InviteToFamilyPage} name="inviteToFamilyWithID" />
-          <Route path="/event/{id}" page={EditEventPublicPage} name="editEventPublic" />
+          <Route path="/edit-event/{id}" page={EditEventPublicPage} name="editEventPublic" />
         </Private>
         <Private unauthenticated="calendar" roles="admin">
           <Set wrap={ScaffoldLayout} title="Events" titleTo="events" buttonLabel="New Event" buttonTo="newEvent">

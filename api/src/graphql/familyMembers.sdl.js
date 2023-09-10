@@ -4,7 +4,6 @@ export const schema = gql`
     familyId: String!
     userId: String!
     admin: Boolean!
-    inviteCode: String!
     Family: Family!
     User: User!
   }
@@ -19,23 +18,25 @@ export const schema = gql`
     familyId: String!
     userId: String!
     admin: Boolean!
-    inviteCode: String!
   }
 
   input UpdateFamilyMemberInput {
     familyId: String
     userId: String
     admin: Boolean
-    inviteCode: String
   }
 
   input CreateMemberInviteInput {
     email: String!
   }
+  input CreateFamilyMemberInviteInput {
+    email: String
+    name: String
+  }
 
   type Mutation {
     createMemberInvite(
-      input: CreateMemberInviteInput!
+      input: CreateFamilyMemberInviteInput!
     ): FamilyMember @requireAuth
     createFamilyMember(
       input: CreateFamilyMemberInput!

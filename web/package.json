@@ -15,10 +15,10 @@
     "@chakra-ui/react": "^2",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@redwoodjs/auth-dbauth-web": "6.1.0",
-    "@redwoodjs/forms": "6.1.0",
-    "@redwoodjs/router": "6.1.0",
-    "@redwoodjs/web": "6.1.0",
+    "@redwoodjs/auth-dbauth-web": "6.2.0",
+    "@redwoodjs/forms": "6.2.0",
+    "@redwoodjs/router": "6.2.0",
+    "@redwoodjs/web": "6.2.0",
     "@simplewebauthn/browser": "^7",
     "chrono-node": "^2.6.4",
     "compromise": "^14.10.0",
@@ -33,6 +33,6 @@
     "rrule": "^2.7.2"
   },
   "devDependencies": {
-    "@redwoodjs/vite": "6.1.0"
+    "@redwoodjs/vite": "6.2.0"
   }
 }

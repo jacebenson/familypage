@@ -1,12 +1,33 @@
 import { db } from 'src/lib/db'
-
+import { createId } from '@paralleldrive/cuid2';
+import CryptoJS from 'crypto-js'
 let randomString = (length) => {
   let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   let result = ''
   for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
   return result
 }
-
+let randomNumber = (() => {
+  let random = CryptoJS.lib.WordArray.random(6)
+  let randomString = random.toString()
+  let sixDigitNumber = randomString.replace(/\D/g, '')
+  if (sixDigitNumber.length < 6) {
+    sixDigitNumber = sixDigitNumber.padStart(6, '0')
+  }
+  if (sixDigitNumber.length > 6) {
+    sixDigitNumber = sixDigitNumber.slice(0, 6)
+  }
+  return sixDigitNumber.toString()
+})()
+let salt = CryptoJS.lib.WordArray.random(30).toString()
+let loginToken = CryptoJS.PBKDF2(randomNumber, salt, {
+  keySize: 256 / 32,
+}).toString()
+let loginTokenExpiresAt = new Date()
+loginTokenExpiresAt.setMinutes(loginTokenExpiresAt.getMinutes() + 120)
+let hashedPassword = CryptoJS.PBKDF2(randomString(10), salt, {
+  keySize: 256 / 32,
+}).toString()
 export const familyMembersByFamily = async ({familyId}) => {
   if(!familyId) return []
   let members = await db.familyMember.findMany({
@@ -18,54 +39,78 @@ export const familyMembersByFamily = async ({familyId}) => {
 
 export const createMemberInvite = async ({ input }) => {
   console.log({ message: 'Running createMemberInvite', input })
-  let { email } = input
-  // get the logged in user's familyId
-  let family = await db.familyMember.findFirst({
-    where: { userId: context.currentUser.id },
-  })
-  let familyId = family?.familyId
-  console.log({
-    message: 'Running createMemberInvite with email and familyId',
-    input,
-    familyId,
-  })
-  if(!email) return null
-  let user = await db.user.findUnique({
+  let { name, email } = input
+  let isUser = await db.user.findUnique({
     where: { email },
   })
-  if(user) {
+  let familyId = context.currentUser?.FamilyMember[0]?.Family?.id
+  if (isUser) {
     // create familyMember
     let familyMember = await db.familyMember.create({
       data: {
         familyId,
-        userId: user.id,
+        userId: isUser.id,
         admin: false,
-        inviteCode: randomString(4),
       },
     })
     return familyMember
   }
-  if(!user) {
+  if (!isUser) {
     // create user
-    let user = await db.user.create({
-      data: {
-        email,
-        name: email.split('@')[0],
-        salt: randomString(4),
-        hashedPassword: randomString(4),
-
-      },
-    })
-    // create familyMember
-    let familyMember = await db.familyMember.create({
-      data: {
-        familyId,
-        userId: user.id,
-        admin: false,
-        inviteCode: randomString(4),
-      },
-    })
-    return familyMember
+    // if there is no email, then generate one
+    if (!email) {
+      //create the user with a random email
+      let cuid = createId()
+      email = `${name}-${cuid}@example.com`
+      let user = await db.user.create({
+        data: {
+          email,
+          name,
+          id: cuid,
+          salt,
+          hashedPassword,
+        },
+      })
+      // create familyMember
+      let familyMember = await db.familyMember.create({
+        data: {
+          admin: false,
+          Family: {
+            connect: {
+              id: familyId,
+            },
+          },
+          User: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      })
+      return familyMember
+    }
+    if (email) {
+      //create the user with the email
+      let user = await db.user.create({
+        data: {
+          email,
+          name,
+          salt,
+          hashedPassword,
+          resetToken: loginToken,
+          resetTokenExpiresAt: loginTokenExpiresAt,
+        },
+      })
+      // create familyMember
+      let familyMember = await db.familyMember.create({
+        data: {
+          familyId,
+          userId: user.id,
+          admin: false,
+        },
+      })
+      return familyMember
+    }
   }
   return null
 }

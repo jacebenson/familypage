@@ -4,7 +4,6 @@
 // so that means... two forms
 import { useAuth } from "src/auth"
 import { useMutation, gql } from '@redwoodjs/web'
-import NewFamily from "../Family/NewFamily/NewFamily"
 
 'use client'
 
@@ -24,7 +23,8 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  Flex
 } from '@chakra-ui/react'
 import NewFamilyModal from "../Family/NewFamily/NewFamilyModal"
 
@@ -162,7 +162,6 @@ const JOIN_FAMILY_MUTATION = gql`
       id
       familyId
       userId
-      inviteCode
     }
   }
 `
@@ -182,12 +181,24 @@ const SetFamily = () => {
   // now need a function to handle each mutation
 
 
+// lets render a 2 col wide grid unless small
 
   return (
-  <>
+  <Flex
+    direction={{ base: 'column', md: 'row' }}
+    bg={useColorModeValue('gray.50', 'gray.800')}
+    // minh is.. 80%
+    minH={'80vh'}
+    align={'center'}
+    justify={'center'}
+    gap={4}
+    >
+
+    <Box>
+      {createForm()}
+    </Box>
     {joinForm()}
-    {createForm()}
-  </>
+  </Flex>
   )
 }
 

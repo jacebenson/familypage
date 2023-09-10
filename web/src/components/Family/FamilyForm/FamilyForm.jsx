@@ -40,23 +40,6 @@ const FamilyForm = (props) => {
 
         <FieldError name="name" className="rw-field-error" />
 
-        <Label
-          name="description"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Description
-        </Label>
-
-        <TextField
-          name="description"
-          defaultValue={props.family?.description}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-        />
-
-        <FieldError name="description" className="rw-field-error" />
-
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save

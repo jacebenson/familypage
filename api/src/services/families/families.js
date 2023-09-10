@@ -28,7 +28,6 @@ export const createFamily = async ({ input }) => {
         familyId: family.id,
         userId: currentUser.id,
         admin: true,
-        inviteCode: '',
       }
     })
     // create event that is the family calendar

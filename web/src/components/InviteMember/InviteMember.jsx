@@ -4,13 +4,12 @@ import { toast } from "@redwoodjs/web/toast"
 import InviteMemberForm from "src/components/FamilyMember/FamilyMemberForm/InviteMemberForm"
 import { navigate, routes } from "@redwoodjs/router"
 let CREATE_INVITE_MUTATION = gql`
-    mutation createMemberInvite($email: String!) {
-      createMemberInvite(input: {email: $email}) {
+    mutation createMemberInvite($email: String, $name: String) {
+      createMemberInvite(input: {email: $email, name: $name}) {
         id
         familyId
         userId
         admin
-        inviteCode
       }
     }
   `

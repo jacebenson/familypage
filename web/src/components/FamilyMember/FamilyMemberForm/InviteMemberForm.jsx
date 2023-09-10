@@ -24,7 +24,23 @@ const FamilyMemberForm = (props) => {
           titleClassName="rw-form-error-title"
           listClassName="rw-form-error-list"
         />
+<Label
+          name="name"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Name
+        </Label>
 
+        <TextField
+          name="name"
+          placeholder={'Bart'}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="name" className="rw-field-error" />
 <Label
           name="email"
           className="rw-label"
@@ -35,10 +51,10 @@ const FamilyMemberForm = (props) => {
 
         <TextField
           name="email"
-          defaultValue={'tom@example.com'}
+          placeholder={'email or name'}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
+          validation={{ required: false }}
         />
 
         <FieldError name="email" className="rw-field-error" />

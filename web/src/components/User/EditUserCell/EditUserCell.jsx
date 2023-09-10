@@ -14,7 +14,6 @@ export const QUERY = gql`
       salt
       hashedPassword
       resetToken
-      resetTokenExpires
       resetTokenExpiresAt
       roles
     }
@@ -29,7 +28,6 @@ const UPDATE_USER_MUTATION = gql`
       salt
       hashedPassword
       resetToken
-      resetTokenExpires
       resetTokenExpiresAt
       roles
     }

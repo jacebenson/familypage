@@ -9,7 +9,6 @@ export const QUERY = gql`
       familyId
       userId
       admin
-      inviteCode
     }
   }
 `

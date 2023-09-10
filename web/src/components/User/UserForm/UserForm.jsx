@@ -84,23 +84,6 @@ const UserForm = (props) => {
         <FieldError name="resetToken" className="rw-field-error" />
 
         <Label
-          name="resetTokenExpires"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Reset token expires
-        </Label>
-
-        <TextField
-          name="resetTokenExpires"
-          defaultValue={props.user?.resetTokenExpires}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-        />
-
-        <FieldError name="resetTokenExpires" className="rw-field-error" />
-
-        <Label
           name="resetTokenExpiresAt"
           className="rw-label"
           errorClassName="rw-label rw-label-error"

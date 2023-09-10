@@ -41,7 +41,6 @@ const FamiliesList = ({ families }) => {
           <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Description</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -50,7 +49,6 @@ const FamiliesList = ({ families }) => {
             <tr key={family.id}>
               <td>{truncate(family.id)}</td>
               <td>{truncate(family.name)}</td>
-              <td>{truncate(family.description)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link

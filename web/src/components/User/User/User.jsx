@@ -64,10 +64,6 @@ const User = ({ user }) => {
               <td>{user.resetToken}</td>
             </tr>
             <tr>
-              <th>Reset token expires</th>
-              <td>{user.resetTokenExpires}</td>
-            </tr>
-            <tr>
               <th>Reset token expires at</th>
               <td>{timeTag(user.resetTokenExpiresAt)}</td>
             </tr>

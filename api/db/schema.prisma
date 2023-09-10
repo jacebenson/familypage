@@ -18,7 +18,6 @@ model User {
   salt                String
   hashedPassword      String
   resetToken          String?
-  resetTokenExpires   String?
   resetTokenExpiresAt DateTime?
   FamilyMember        FamilyMember[]
   roles               String?        @default("user")
@@ -50,11 +49,10 @@ model Family {
 }
 
 model FamilyMember {
-  id         String  @id @default(cuid())
-  familyId   String
-  userId     String?
-  admin      Boolean @default(false)
-  inviteCode String
-  Family     Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  User       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id       String  @id @default(cuid())
+  familyId String
+  userId   String?
+  admin    Boolean @default(false)
+  Family   Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  User     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

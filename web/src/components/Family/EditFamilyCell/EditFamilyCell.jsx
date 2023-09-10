@@ -10,7 +10,6 @@ export const QUERY = gql`
     family: family(id: $id) {
       id
       name
-      description
     }
   }
 `
@@ -19,7 +18,6 @@ const UPDATE_FAMILY_MUTATION = gql`
     updateFamily(id: $id, input: $input) {
       id
       name
-      description
     }
   }
 `

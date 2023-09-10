@@ -383,9 +383,7 @@ export const Success = ({ event, familyMembers, setEvents, events, onClose, edit
     </Box>}
     {edit && <Box>
       <form>
-      <Code
-      whiteSpace={'pre'}
-      >{JSON.stringify(event, null, 2)}</Code>
+
         {fields.map((field) => {
           let fieldName = (() => {
             //title case the field name

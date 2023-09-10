@@ -1,4 +1,4 @@
-import { Box, Code, Table, Thead, Th, Tbody, Tr, Td, Button } from "@chakra-ui/react"
+import { Box, Code, Table, Thead, Th, Tbody, Tr, Td, Button, Text } from "@chakra-ui/react"
 import InviteMember from "../InviteMember/InviteMember"
 import { useAuth } from "src/auth"
 import { useMutation } from '@redwoodjs/web'
@@ -7,9 +7,9 @@ export const QUERY = gql`
     familyMembersByFamily (familyId: $familyId) {
       id
       admin
-      inviteCode
       User {
         name
+        id
       }
     }
   }
@@ -40,6 +40,12 @@ export const Failure = ({ error }) => (
 
 export const Success = ({ familyMembersByFamily, familyId }) => {
   const { currentUser } = useAuth()
+  // lets remove my own user from the list
+  let myFamilyMemberId = JSON.stringify(currentUser?.FamilyMember[0]?.id)
+  let filteredFamilyMembers = familyMembersByFamily.filter((familyMember) => {
+    return JSON.stringify(familyMember.id) !== myFamilyMemberId
+  })
+
   const [deleteFamilyMember] = useMutation(DELETE_MEMBER_MUTATION, {
     onCompleted: () => {
       toast.success('FamilyMember deleted')
@@ -70,23 +76,31 @@ export const Success = ({ familyMembersByFamily, familyId }) => {
         <Thead>
           <Tr>
           <Th>Name</Th>
-          <Th>Invite Code</Th>
-          {currentUser?.FamilyMember[0]?.admin ? <Th>Action</Th> : null}
+          <Th>Role</Th>
+          {currentUser?.FamilyMember[0]?.admin && <Th>Action</Th> }
           </Tr>
         </Thead>
         <Tbody>
-          {familyMembersByFamily.map((familyMember) => (
+        {/**  let loop exclude my own user */}
+          {filteredFamilyMembers.map((familyMember) => (
             <Tr key={familyMember.id}>
               <Td>{familyMember.User.name}</Td>
-              <Td>{familyMember.inviteCode}</Td>
+              <Td>{familyMember.admin ? 'Admin' : 'Member'}</Td>
               {currentUser?.FamilyMember[0]?.admin && (
                 <Td>
+                {familyMember.User.id === currentUser.id && (
+                  <Text>This is you!</Text>
+                )}
+                {familyMember.User.id !== currentUser.id && (
+                  <>
                   <Button
                   colorScheme="red"
                   onClick={() => onDeleteClick(familyMember.id)}
                   >
                     Delete
                   </Button>
+                  </>
+                )}
                 </Td>
               )}
 

@@ -36,9 +36,7 @@ const HomePage = () => {
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            Monetize your content by charging your most loyal readers and reward them
-            loyalty points. Give back to your loyal readers by granting them access to
-            your pre-releases and sneak-peaks.
+            Make one calendar and share it.  Add events, share events, and sync events with your family.
           </Text>
           <Flex
             direction={{ base: 'column', md: 'row' }}
@@ -53,10 +51,8 @@ const HomePage = () => {
               features={[
                 "Add events",
                 "Share events",
-                "Export events",
-                "Import events",
                 "Sync events",
-                "Your data is yours"
+                "You own your data"
               ]}
               CTALink={"https://github.com/jacebenson/familyPage"}
               CTAText={"Learn More"}
@@ -70,8 +66,6 @@ const HomePage = () => {
               features={[
                 "Add events",
                 "Share events",
-                "Export events",
-                "Import events",
                 "Sync events",
                 "Access in an Instant"
               ]}
@@ -79,8 +73,6 @@ const HomePage = () => {
               CTAText={"Sign up"}
               CTA2Link={routes.login()}
               CTA2Text={"Log in"}
-              CTA3Link={routes.joinFamily()}
-              CTA3Text={"Join a family"}
             />
             <Spacer />
           </Flex>

@@ -6,7 +6,6 @@ CREATE TABLE "User" (
     "salt" TEXT NOT NULL,
     "hashedPassword" TEXT NOT NULL,
     "resetToken" TEXT,
-    "resetTokenExpires" TEXT,
     "resetTokenExpiresAt" DATETIME,
     "roles" TEXT DEFAULT 'user'
 );
@@ -30,15 +29,6 @@ CREATE TABLE "Event" (
 );
 
 -- CreateTable
-CREATE TABLE "UserEvent" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "userId" TEXT NOT NULL,
-    "eventId" TEXT NOT NULL,
-    CONSTRAINT "UserEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "UserEvent_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
 CREATE TABLE "Family" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
@@ -51,7 +41,7 @@ CREATE TABLE "FamilyMember" (
     "familyId" TEXT NOT NULL,
     "userId" TEXT,
     "admin" BOOLEAN NOT NULL DEFAULT false,
-    "inviteCode" TEXT NOT NULL,
+    "createdBy" TEXT NOT NULL,
     CONSTRAINT "FamilyMember_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "Family" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "FamilyMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -11,7 +11,6 @@ export const QUERY = gql`
       name
       email
       resetToken
-      resetTokenExpires
       resetTokenExpiresAt
       roles
     }

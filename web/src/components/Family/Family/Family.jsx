@@ -47,10 +47,6 @@ const Family = ({ family }) => {
               <th>Name</th>
               <td>{family.name}</td>
             </tr>
-            <tr>
-              <th>Description</th>
-              <td>{family.description}</td>
-            </tr>
           </tbody>
         </table>
       </div>

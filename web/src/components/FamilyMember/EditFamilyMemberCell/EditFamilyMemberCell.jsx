@@ -12,7 +12,6 @@ export const QUERY = gql`
       familyId
       userId
       admin
-      inviteCode
     }
   }
 `
@@ -26,7 +25,6 @@ const UPDATE_FAMILY_MEMBER_MUTATION = gql`
       familyId
       userId
       admin
-      inviteCode
     }
   }
 `

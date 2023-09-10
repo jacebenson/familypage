@@ -55,10 +55,6 @@ const FamilyMember = ({ familyMember }) => {
               <th>Admin</th>
               <td>{checkboxInputTag(familyMember.admin)}</td>
             </tr>
-            <tr>
-              <th>Invite code</th>
-              <td>{familyMember.inviteCode}</td>
-            </tr>
           </tbody>
         </table>
       </div>

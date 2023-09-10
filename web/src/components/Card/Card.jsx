@@ -8,6 +8,9 @@ import {
   ListIcon,
   Button,
   useColorModeValue,
+  Flex,
+  Spacer,
+  Icon,
 } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 
@@ -71,14 +74,16 @@ const Card = ({
         </Stack>
 
         <Box bg={useColorModeValue('gray.50', 'gray.900')} px={6} py={10}>
-          <List spacing={3}>
+        <Box as={'ul'} textAlign={'left'}>
             {features.map((feature, index) => (
-              <ListItem key={index}>
-                <ListIcon as={CheckIcon} color="green.400" />
+              <Box as={Flex} key={index} pl={16} mb={2}>
+                <Box pr={2}>
+                <Icon as={CheckIcon} color="green.400" />
+                </Box>
                 {feature}
-              </ListItem>
+              </Box>
             ))}
-          </List>
+        </Box>
 
           <Button
             as={'a'}

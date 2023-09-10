@@ -73,7 +73,6 @@ export const schema = gql`
     createEvent(input: CreateEventInput!): Event! @requireAuth
     createEventWithAttendees(input: CreateEventWithAttendeesInput!): Event! @requireAuth
     updateEvent(id: String!, input: UpdateEventInput!): Event! @requireAuth
-    updateEventPublic(id: String!, input: UpdateEventInput!): Event! @requireAuth
     deleteEvent(id: String!): Event! @requireAuth
   }
 `

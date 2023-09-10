@@ -20,7 +20,6 @@ const Routes = () => {
       <Route path="/" page={HomePage} name="home" />
       <Set wrap={HomeLayout}>
         <Route notfound page={NotFoundPage} />
-        <Route path="/event/{id}" page={EditEventPublicPage} name="editEventPublic" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
@@ -33,6 +32,7 @@ const Routes = () => {
           <Route path="/my-profile" page={MyProfilePage} name="myProfile" />
           <Route path="/invite-to-family" page={InviteToFamilyPage} name="inviteToFamily" />
           <Route path="/inviteSomeone/{familyId}" page={InviteToFamilyPage} name="inviteToFamilyWithID" />
+          <Route path="/event/{id}" page={EditEventPublicPage} name="editEventPublic" />
         </Private>
         <Private unauthenticated="calendar" roles="admin">
           <Set wrap={ScaffoldLayout} title="Events" titleTo="events" buttonLabel="New Event" buttonTo="newEvent">

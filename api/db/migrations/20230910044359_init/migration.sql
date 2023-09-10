@@ -41,7 +41,6 @@ CREATE TABLE "FamilyMember" (
     "familyId" TEXT NOT NULL,
     "userId" TEXT,
     "admin" BOOLEAN NOT NULL DEFAULT false,
-    "createdBy" TEXT NOT NULL,
     CONSTRAINT "FamilyMember_familyId_fkey" FOREIGN KEY ("familyId") REFERENCES "Family" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "FamilyMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
